@@ -1,0 +1,148 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/phuoctran/Documents/Private/ClinicManagement/src/ClinicManagement.Infrastructure/ClinicManagement.Infrastructure.csproj": {}
+  },
+  "projects": {
+    "/Users/phuoctran/Documents/Private/ClinicManagement/src/ClinicManagement.Core/ClinicManagement.Core.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/phuoctran/Documents/Private/ClinicManagement/src/ClinicManagement.Core/ClinicManagement.Core.csproj",
+        "projectName": "ClinicManagement.Core",
+        "projectPath": "/Users/phuoctran/Documents/Private/ClinicManagement/src/ClinicManagement.Core/ClinicManagement.Core.csproj",
+        "packagesPath": "/Users/phuoctran/.nuget/packages/",
+        "outputPath": "/Users/phuoctran/Documents/Private/ClinicManagement/src/ClinicManagement.Core/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/phuoctran/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "/usr/local/share/dotnet/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/phuoctran/Documents/Private/ClinicManagement/src/ClinicManagement.Infrastructure/ClinicManagement.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/phuoctran/Documents/Private/ClinicManagement/src/ClinicManagement.Infrastructure/ClinicManagement.Infrastructure.csproj",
+        "projectName": "ClinicManagement.Infrastructure",
+        "projectPath": "/Users/phuoctran/Documents/Private/ClinicManagement/src/ClinicManagement.Infrastructure/ClinicManagement.Infrastructure.csproj",
+        "packagesPath": "/Users/phuoctran/.nuget/packages/",
+        "outputPath": "/Users/phuoctran/Documents/Private/ClinicManagement/src/ClinicManagement.Infrastructure/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/phuoctran/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "/usr/local/share/dotnet/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/Users/phuoctran/Documents/Private/ClinicManagement/src/ClinicManagement.Core/ClinicManagement.Core.csproj": {
+                "projectPath": "/Users/phuoctran/Documents/Private/ClinicManagement/src/ClinicManagement.Core/ClinicManagement.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.3, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.9, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

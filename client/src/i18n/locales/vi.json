@@ -1,0 +1,105 @@
+{
+  "common": {
+    "appName": "Quản Lý Phòng Khám",
+    "appTitle": "Hệ Thống Quản Lý Phòng Khám",
+    "language": "Ngôn ngữ",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "add": "Thêm",
+    "search": "Tìm kiếm",
+    "actions": "Thao tác",
+    "loading": "Đang tải...",
+    "noData": "Không có dữ liệu"
+  },
+  "menu": {
+    "dashboard": "Trang chủ",
+    "patients": "Bệnh nhân",
+    "appointments": "Lịch hẹn",
+    "services": "Dịch vụ",
+    "transactions": "Thu chi",
+    "inventory": "Kho",
+    "staff": "Nhân viên"
+  },
+  "dashboard": {
+    "title": "Trang chủ",
+    "totalPatients": "Tổng bệnh nhân",
+    "appointmentsToday": "Lịch hẹn hôm nay",
+    "revenueThisMonth": "Doanh thu tháng này",
+    "servicesAvailable": "Dịch vụ khả dụng"
+  },
+  "patients": {
+    "title": "Bệnh nhân",
+    "addPatient": "Thêm bệnh nhân",
+    "fullName": "Họ và tên",
+    "phoneNumber": "Số điện thoại",
+    "email": "Email",
+    "dateOfBirth": "Ngày sinh",
+    "address": "Địa chỉ",
+    "gender": "Giới tính",
+    "notes": "Ghi chú"
+  },
+  "appointments": {
+    "title": "Lịch hẹn",
+    "addAppointment": "Thêm lịch hẹn",
+    "appointmentDate": "Ngày hẹn",
+    "patient": "Bệnh nhân",
+    "staff": "Nhân viên",
+    "status": "Trạng thái",
+    "scheduled": "Đã đặt",
+    "completed": "Hoàn thành",
+    "cancelled": "Đã hủy"
+  },
+  "services": {
+    "title": "Dịch vụ",
+    "addService": "Thêm dịch vụ",
+    "serviceName": "Tên dịch vụ",
+    "description": "Mô tả",
+    "price": "Giá",
+    "duration": "Thời lượng (phút)"
+  },
+  "transactions": {
+    "title": "Thu chi",
+    "addTransaction": "Thêm giao dịch",
+    "type": "Loại",
+    "amount": "Số tiền",
+    "date": "Ngày",
+    "category": "Danh mục",
+    "revenue": "Thu",
+    "expense": "Chi"
+  },
+  "inventory": {
+    "title": "Kho",
+    "addItem": "Thêm mặt hàng",
+    "itemName": "Tên mặt hàng",
+    "quantity": "Số lượng",
+    "unit": "Đơn vị",
+    "expiryDate": "Hạn sử dụng"
+  },
+  "staff": {
+    "title": "Nhân viên",
+    "addStaff": "Thêm nhân viên",
+    "role": "Vai trò",
+    "active": "Hoạt động",
+    "inactive": "Ngưng hoạt động"
+  },
+  "auth": {
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
+    "loginTitle": "Đăng nhập Quản Lý Phòng Khám",
+    "loginSubtitle": "Nhập email hoặc số điện thoại để tiếp tục",
+    "emailOrPhone": "Email hoặc Số điện thoại",
+    "password": "Mật khẩu",
+    "rememberMe": "Ghi nhớ đăng nhập",
+    "forgotPassword": "Quên mật khẩu?",
+    "loginButton": "Đăng nhập",
+    "forgotPasswordTitle": "Quên mật khẩu",
+    "forgotPasswordSubtitle": "Nhập email để đặt lại mật khẩu",
+    "resetPassword": "Đặt lại mật khẩu",
+    "backToLogin": "Quay lại đăng nhập",
+    "resetLinkSent": "Đã gửi liên kết đặt lại mật khẩu",
+    "checkEmail": "Vui lòng kiểm tra email để nhận hướng dẫn đặt lại mật khẩu",
+    "email": "Email"
+  }
+}

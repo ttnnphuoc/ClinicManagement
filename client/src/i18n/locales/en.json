@@ -1,0 +1,105 @@
+{
+  "common": {
+    "appName": "Clinic Management",
+    "appTitle": "Clinic Management System",
+    "language": "Language",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "actions": "Actions",
+    "loading": "Loading...",
+    "noData": "No data available"
+  },
+  "menu": {
+    "dashboard": "Dashboard",
+    "patients": "Patients",
+    "appointments": "Appointments",
+    "services": "Services",
+    "transactions": "Revenue/Expense",
+    "inventory": "Inventory",
+    "staff": "Staff"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "totalPatients": "Total Patients",
+    "appointmentsToday": "Appointments Today",
+    "revenueThisMonth": "Revenue This Month",
+    "servicesAvailable": "Services Available"
+  },
+  "patients": {
+    "title": "Patients",
+    "addPatient": "Add Patient",
+    "fullName": "Full Name",
+    "phoneNumber": "Phone Number",
+    "email": "Email",
+    "dateOfBirth": "Date of Birth",
+    "address": "Address",
+    "gender": "Gender",
+    "notes": "Notes"
+  },
+  "appointments": {
+    "title": "Appointments",
+    "addAppointment": "Add Appointment",
+    "appointmentDate": "Appointment Date",
+    "patient": "Patient",
+    "staff": "Staff",
+    "status": "Status",
+    "scheduled": "Scheduled",
+    "completed": "Completed",
+    "cancelled": "Cancelled"
+  },
+  "services": {
+    "title": "Services",
+    "addService": "Add Service",
+    "serviceName": "Service Name",
+    "description": "Description",
+    "price": "Price",
+    "duration": "Duration (minutes)"
+  },
+  "transactions": {
+    "title": "Revenue/Expense",
+    "addTransaction": "Add Transaction",
+    "type": "Type",
+    "amount": "Amount",
+    "date": "Date",
+    "category": "Category",
+    "revenue": "Revenue",
+    "expense": "Expense"
+  },
+  "inventory": {
+    "title": "Inventory",
+    "addItem": "Add Item",
+    "itemName": "Item Name",
+    "quantity": "Quantity",
+    "unit": "Unit",
+    "expiryDate": "Expiry Date"
+  },
+  "staff": {
+    "title": "Staff",
+    "addStaff": "Add Staff",
+    "role": "Role",
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "loginTitle": "Login to Clinic Management",
+    "loginSubtitle": "Enter your email or phone number to continue",
+    "emailOrPhone": "Email or Phone Number",
+    "password": "Password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "loginButton": "Sign In",
+    "forgotPasswordTitle": "Forgot Password",
+    "forgotPasswordSubtitle": "Enter your email to reset password",
+    "resetPassword": "Reset Password",
+    "backToLogin": "Back to Login",
+    "resetLinkSent": "Reset link sent successfully",
+    "checkEmail": "Please check your email for reset instructions",
+    "email": "Email"
+  }
+}
