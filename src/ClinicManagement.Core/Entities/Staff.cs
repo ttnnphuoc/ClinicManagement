@@ -9,5 +9,6 @@ public class Staff : BaseEntity
     public string Role { get; set; } = string.Empty;
     public bool IsActive { get; set; } = true;
 
+    public ICollection<StaffClinic> StaffClinics { get; set; } = new List<StaffClinic>();
     public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
 }

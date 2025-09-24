@@ -107,6 +107,7 @@
     "AUTH_FIELDS_REQUIRED": "Email/Phone and Password are required",
     "AUTH_INVALID_CREDENTIALS": "Invalid email/phone or password",
     "AUTH_UNAUTHORIZED": "Unauthorized access",
+    "AUTH_CLINIC_ACCESS_DENIED": "You don't have permission to access this clinic",
     "BAD_REQUEST": "Invalid request",
     "NOT_FOUND": "Resource not found",
     "INTERNAL_ERROR": "Internal server error",

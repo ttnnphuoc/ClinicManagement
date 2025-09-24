@@ -2,8 +2,10 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using ClinicManagement.API.Middleware;
 using ClinicManagement.Core.Interfaces;
 using ClinicManagement.Infrastructure.Data;
+using ClinicManagement.Infrastructure.Repositories;
 using ClinicManagement.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,6 +35,10 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddScoped<IClinicContext, ClinicContext>();
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IStaffRepository, StaffRepository>();
+builder.Services.AddScoped<IClinicRepository, ClinicRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddControllers();
@@ -60,6 +66,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 app.UseAuthentication();
+app.UseMiddleware<ClinicMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
 

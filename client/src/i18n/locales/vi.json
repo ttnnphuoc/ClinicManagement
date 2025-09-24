@@ -107,6 +107,7 @@
     "AUTH_FIELDS_REQUIRED": "Email/Số điện thoại và Mật khẩu là bắt buộc",
     "AUTH_INVALID_CREDENTIALS": "Email/Số điện thoại hoặc mật khẩu không đúng",
     "AUTH_UNAUTHORIZED": "Truy cập không được phép",
+    "AUTH_CLINIC_ACCESS_DENIED": "Bạn không có quyền truy cập phòng khám này",
     "BAD_REQUEST": "Yêu cầu không hợp lệ",
     "NOT_FOUND": "Không tìm thấy tài nguyên",
     "INTERNAL_ERROR": "Lỗi máy chủ nội bộ",

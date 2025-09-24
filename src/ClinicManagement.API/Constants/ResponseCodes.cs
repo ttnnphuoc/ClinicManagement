@@ -8,6 +8,7 @@ public static class ResponseCodes
         public const string FieldsRequired = "AUTH_FIELDS_REQUIRED";
         public const string InvalidCredentials = "AUTH_INVALID_CREDENTIALS";
         public const string Unauthorized = "AUTH_UNAUTHORIZED";
+        public const string ClinicAccessDenied = "AUTH_CLINIC_ACCESS_DENIED";
     }
 
     public static class Common
