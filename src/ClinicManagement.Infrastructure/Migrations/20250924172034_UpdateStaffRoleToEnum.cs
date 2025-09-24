@@ -10,13 +10,22 @@ namespace ClinicManagement.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<int>(
-                name: "Role",
-                table: "Staff",
-                type: "integer",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "text");
+            // Map existing string values to enum integer values
+            // SuperAdmin=0, ClinicManager=1, Doctor=2, Nurse=3, Receptionist=4, Accountant=5, Pharmacist=6
+            migrationBuilder.Sql(@"
+                ALTER TABLE ""Staff"" 
+                ALTER COLUMN ""Role"" TYPE integer 
+                USING CASE ""Role""
+                    WHEN 'SuperAdmin' THEN 0
+                    WHEN 'ClinicManager' THEN 1
+                    WHEN 'Doctor' THEN 2
+                    WHEN 'Nurse' THEN 3
+                    WHEN 'Receptionist' THEN 4
+                    WHEN 'Accountant' THEN 5
+                    WHEN 'Pharmacist' THEN 6
+                    ELSE 4
+                END;
+            ");
         }
 
         /// <inheritdoc />

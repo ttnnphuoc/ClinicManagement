@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, InputNumber, Switch, App, Space, Popconfirm } from 'antd';
+import { Table, Button, Modal, Form, Input, InputNumber, Switch, App, Space, Popconfirm, Select } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { serviceService, type Service, type CreateServiceRequest } from '../services/serviceService';
+import { clinicService, type Clinic } from '../services/clinicService';
+
+const { Option } = Select;
 
 const Services = () => {
   const { t } = useTranslation();
   const { message } = App.useApp();
   const [services, setServices] = useState<Service[]>([]);
+  const [clinics, setClinics] = useState<Clinic[]>([]);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingService, setEditingService] = useState<Service | null>(null);
@@ -16,6 +20,11 @@ const Services = () => {
   const [pageSize] = useState(10);
   const [searchText, setSearchText] = useState('');
   const [form] = Form.useForm();
+
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const currentClinic = JSON.parse(localStorage.getItem('currentClinic') || 'null');
+  const isSuperAdmin = user.role === 'SuperAdmin';
+  const isClinicManager = user.role === 'ClinicManager';
 
   const fetchServices = async () => {
     setLoading(true);
@@ -32,13 +41,33 @@ const Services = () => {
     }
   };
 
+  const fetchClinics = async () => {
+    try {
+      const response = await clinicService.getActiveClinics();
+      if (response.success && response.data) {
+        setClinics(response.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch clinics:', error);
+    }
+  };
+
   useEffect(() => {
     fetchServices();
   }, [page, searchText]);
 
+  useEffect(() => {
+    if (isSuperAdmin) {
+      fetchClinics();
+    }
+  }, []);
+
   const handleAdd = () => {
     setEditingService(null);
     form.resetFields();
+    if (isClinicManager && currentClinic) {
+      form.setFieldsValue({ clinicId: currentClinic.id });
+    }
     setIsModalOpen(true);
   };
 
@@ -225,6 +254,31 @@ const Services = () => {
               addonAfter={t('services.minutes')}
             />
           </Form.Item>
+
+          {isSuperAdmin && (
+            <Form.Item
+              name="clinicId"
+              label={t('services.clinic')}
+              rules={[{ required: true, message: t('services.clinicRequired') }]}
+            >
+              <Select placeholder={t('services.selectClinic')}>
+                {clinics.map(clinic => (
+                  <Option key={clinic.id} value={clinic.id}>
+                    {clinic.name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+          )}
+
+          {isClinicManager && currentClinic && (
+            <Form.Item
+              name="clinicId"
+              label={t('services.clinic')}
+            >
+              <Input value={currentClinic.name} disabled />
+            </Form.Item>
+          )}
 
           <Form.Item name="isActive" label={t('services.status')} valuePropName="checked">
             <Switch checkedChildren={t('services.active')} unCheckedChildren={t('services.inactive')} />

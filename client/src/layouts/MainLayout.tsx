@@ -10,7 +10,7 @@ import {
   TeamOutlined,
   ShopOutlined,
 } from '@ant-design/icons';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 
@@ -22,6 +22,10 @@ const MainLayout = () => {
   const location = useLocation();
   const { t } = useTranslation();
 
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const isSuperAdmin = user.role === 'SuperAdmin';
+  const canManageStaff = user.role === 'SuperAdmin' || user.role === 'ClinicManager';
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -29,48 +33,63 @@ const MainLayout = () => {
     navigate('/login');
   };
 
-  const menuItems = [
-    {
-      key: '/',
-      icon: <DashboardOutlined />,
-      label: t('menu.dashboard'),
-    },
-    {
-      key: '/patients',
-      icon: <UserOutlined />,
-      label: t('menu.patients'),
-    },
-    {
-      key: '/appointments',
-      icon: <CalendarOutlined />,
-      label: t('menu.appointments'),
-    },
-    {
-      key: '/services',
-      icon: <MedicineBoxOutlined />,
-      label: t('menu.services'),
-    },
-    {
-      key: '/clinics',
-      icon: <ShopOutlined />,
-      label: t('menu.clinics'),
-    },
-    {
-      key: '/transactions',
-      icon: <DollarOutlined />,
-      label: t('menu.transactions'),
-    },
-    {
-      key: '/inventory',
-      icon: <InboxOutlined />,
-      label: t('menu.inventory'),
-    },
-    {
-      key: '/staff',
-      icon: <TeamOutlined />,
-      label: t('menu.staff'),
-    },
-  ];
+  const menuItems = useMemo(() => {
+    const items = [
+      {
+        key: '/',
+        icon: <DashboardOutlined />,
+        label: t('menu.dashboard'),
+      },
+      {
+        key: '/patients',
+        icon: <UserOutlined />,
+        label: t('menu.patients'),
+      },
+      {
+        key: '/appointments',
+        icon: <CalendarOutlined />,
+        label: t('menu.appointments'),
+      },
+      {
+        key: '/services',
+        icon: <MedicineBoxOutlined />,
+        label: t('menu.services'),
+      },
+    ];
+
+    // Only SuperAdmin can see Clinics menu
+    if (isSuperAdmin) {
+      items.push({
+        key: '/clinics',
+        icon: <ShopOutlined />,
+        label: t('menu.clinics'),
+      });
+    }
+
+    items.push(
+      {
+        key: '/transactions',
+        icon: <DollarOutlined />,
+        label: t('menu.transactions'),
+      },
+      {
+        key: '/inventory',
+        icon: <InboxOutlined />,
+        label: t('menu.inventory'),
+      }
+    );
+
+    // Only SuperAdmin and ClinicManager can see Staff menu
+    if (canManageStaff) {
+      items.push({
+        key: '/staff',
+        icon: <TeamOutlined />,
+        label: t('menu.staff'),
+      });
+    }
+
+    return items;
+  }, [t, isSuperAdmin, canManageStaff]);
 
   return (
     <Layout style={{ minHeight: '100vh' }}>

@@ -24,6 +24,9 @@ const Staff = () => {
   const [form] = Form.useForm();
   const [passwordForm] = Form.useForm();
 
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const isSuperAdmin = user.role === 'SuperAdmin';
+
   const fetchStaff = async () => {
     setLoading(true);
     try {
@@ -280,7 +283,7 @@ const Staff = () => {
             rules={[{ required: true, message: t('staff.roleRequired') }]}
           >
             <Select>
-              <Option value="SuperAdmin">{t('staff.roles.SuperAdmin')}</Option>
+              {isSuperAdmin && <Option value="SuperAdmin">{t('staff.roles.SuperAdmin')}</Option>}
               <Option value="ClinicManager">{t('staff.roles.ClinicManager')}</Option>
               <Option value="Doctor">{t('staff.roles.Doctor')}</Option>
               <Option value="Nurse">{t('staff.roles.Nurse')}</Option>

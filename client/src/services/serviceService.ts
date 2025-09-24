@@ -13,6 +13,7 @@ export interface Service {
 }
 
 export interface CreateServiceRequest {
+  clinicId?: string;
   name: string;
   description?: string;
   price: number;

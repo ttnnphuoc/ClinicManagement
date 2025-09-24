@@ -62,8 +62,10 @@ public class ServicesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateService([FromBody] CreateServiceRequest request)
     {
+        var clinicId = request.ClinicId ?? _clinicContext.CurrentClinicId;
+        
         var (success, errorCode, service) = await _medicalServiceService.CreateServiceAsync(
-            _clinicContext.CurrentClinicId,
+            clinicId,
             request.Name,
             request.Description,
             request.Price,
