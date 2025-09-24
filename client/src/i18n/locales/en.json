@@ -100,6 +100,22 @@
     "backToLogin": "Back to Login",
     "resetLinkSent": "Reset link sent successfully",
     "checkEmail": "Please check your email for reset instructions",
-    "email": "Email"
+    "email": "Email",
+    "loginSuccess": "Login successful!"
+  },
+  "errors": {
+    "AUTH_FIELDS_REQUIRED": "Email/Phone and Password are required",
+    "AUTH_INVALID_CREDENTIALS": "Invalid email/phone or password",
+    "AUTH_UNAUTHORIZED": "Unauthorized access",
+    "BAD_REQUEST": "Invalid request",
+    "NOT_FOUND": "Resource not found",
+    "INTERNAL_ERROR": "Internal server error",
+    "VALIDATION_ERROR": "Validation failed",
+    "NETWORK_ERROR": "Network error. Please try again.",
+    "UNKNOWN_ERROR": "An error occurred. Please try again."
+  },
+  "success": {
+    "AUTH_LOGIN_SUCCESS": "Login successful!",
+    "SUCCESS": "Operation completed successfully"
   }
 }

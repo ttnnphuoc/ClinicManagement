@@ -100,6 +100,22 @@
     "backToLogin": "Quay lại đăng nhập",
     "resetLinkSent": "Đã gửi liên kết đặt lại mật khẩu",
     "checkEmail": "Vui lòng kiểm tra email để nhận hướng dẫn đặt lại mật khẩu",
-    "email": "Email"
+    "email": "Email",
+    "loginSuccess": "Đăng nhập thành công!"
+  },
+  "errors": {
+    "AUTH_FIELDS_REQUIRED": "Email/Số điện thoại và Mật khẩu là bắt buộc",
+    "AUTH_INVALID_CREDENTIALS": "Email/Số điện thoại hoặc mật khẩu không đúng",
+    "AUTH_UNAUTHORIZED": "Truy cập không được phép",
+    "BAD_REQUEST": "Yêu cầu không hợp lệ",
+    "NOT_FOUND": "Không tìm thấy tài nguyên",
+    "INTERNAL_ERROR": "Lỗi máy chủ nội bộ",
+    "VALIDATION_ERROR": "Xác thực thất bại",
+    "NETWORK_ERROR": "Lỗi kết nối. Vui lòng thử lại.",
+    "UNKNOWN_ERROR": "Đã xảy ra lỗi. Vui lòng thử lại."
+  },
+  "success": {
+    "AUTH_LOGIN_SUCCESS": "Đăng nhập thành công!",
+    "SUCCESS": "Thao tác hoàn tất thành công"
   }
 }

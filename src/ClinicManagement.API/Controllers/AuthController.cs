@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ClinicManagement.API.DTOs;
+using ClinicManagement.API.Constants;
 using ClinicManagement.Core.Interfaces;
 
 namespace ClinicManagement.API.Controllers;
@@ -20,17 +21,17 @@ public class AuthController : ControllerBase
     {
         if (string.IsNullOrWhiteSpace(request.EmailOrPhone) || string.IsNullOrWhiteSpace(request.Password))
         {
-            return BadRequest(new { message = "Email/Phone and Password are required" });
+            return BadRequest(ApiResponse.ErrorResponse(ResponseCodes.Auth.FieldsRequired));
         }
 
         var (success, token, fullName, email, role) = await _authService.LoginAsync(request.EmailOrPhone, request.Password);
 
         if (!success)
         {
-            return Unauthorized(new { message = "Invalid credentials" });
+            return Unauthorized(ApiResponse.ErrorResponse(ResponseCodes.Auth.InvalidCredentials));
         }
 
-        var response = new LoginResponse
+        var loginData = new LoginResponse
         {
             Token = token,
             FullName = fullName,
@@ -38,6 +39,6 @@ public class AuthController : ControllerBase
             Role = role
         };
 
-        return Ok(response);
+        return Ok(ApiResponse.SuccessResponse(ResponseCodes.Auth.LoginSuccess, loginData));
     }
 }

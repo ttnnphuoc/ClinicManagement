@@ -29,3 +29,6 @@ bld/
 *.tmp
 *.temp
 .DS_Store
+src/ClinicManagement.API/obj/Debug/net9.0/ClinicManagement.API.AssemblyInfo.cs
+/src/ClinicManagement.API/obj
+/src/ClinicManagement.API/obj

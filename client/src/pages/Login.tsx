@@ -3,6 +3,7 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { authService } from '../services/authService';
 
 const Login = () => {
   const { t } = useTranslation();
@@ -12,12 +13,26 @@ const Login = () => {
   const onFinish = async (values: any) => {
     setLoading(true);
     try {
-      console.log('Login values:', values);
+      const response = await authService.login({
+        emailOrPhone: values.emailOrPhone,
+        password: values.password,
+      });
       
-      message.success('Login successful!');
-      navigate('/');
-    } catch (error) {
-      message.error('Login failed. Please try again.');
+      if (response.success && response.data) {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', JSON.stringify({
+          fullName: response.data.fullName,
+          email: response.data.email,
+          role: response.data.role,
+        }));
+        
+        message.success(t(`success.${response.code}`) || t('auth.loginSuccess'));
+        navigate('/');
+      }
+    } catch (error: any) {
+      const errorCode = error.response?.data?.code || 'UNKNOWN_ERROR';
+      const errorMessage = t(`errors.${errorCode}`);
+      message.error(errorMessage);
     } finally {
       setLoading(false);
     }
