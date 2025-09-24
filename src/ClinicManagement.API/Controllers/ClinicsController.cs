@@ -12,22 +12,21 @@ namespace ClinicManagement.API.Controllers;
 [Route("api/[controller]")]
 public class ClinicsController : ControllerBase
 {
-    private readonly IClinicRepository _clinicRepository;
+    private readonly IClinicService _clinicService;
 
-    public ClinicsController(IClinicRepository clinicRepository)
+    public ClinicsController(IClinicService clinicService)
     {
-        _clinicRepository = clinicRepository;
+        _clinicService = clinicService;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetClinics([FromQuery] string? search, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        var clinics = await _clinicRepository.SearchClinicsAsync(search, page, pageSize);
-        var total = await _clinicRepository.GetTotalCountAsync(search);
+        var (items, total) = await _clinicService.SearchClinicsAsync(search, page, pageSize);
 
         var response = new
         {
-            items = clinics.Select(c => MapToResponse(c)),
+            items = items.Select(c => MapToResponse(c)),
             total,
             page,
             pageSize
@@ -39,7 +38,7 @@ public class ClinicsController : ControllerBase
     [HttpGet("active")]
     public async Task<IActionResult> GetActiveClinics()
     {
-        var clinics = await _clinicRepository.GetActiveClinicsAsync();
+        var clinics = await _clinicService.GetActiveClinicsAsync();
         var response = clinics.Select(c => MapToResponse(c));
 
         return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success, response));
@@ -48,7 +47,7 @@ public class ClinicsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetClinic(Guid id)
     {
-        var clinic = await _clinicRepository.GetByIdAsync(id);
+        var clinic = await _clinicService.GetClinicByIdAsync(id);
 
         if (clinic == null)
         {
@@ -61,55 +60,49 @@ public class ClinicsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateClinic([FromBody] CreateClinicRequest request)
     {
-        var clinic = new Clinic
+        var (success, errorCode, clinic) = await _clinicService.CreateClinicAsync(
+            request.Name,
+            request.Address,
+            request.PhoneNumber,
+            request.Email,
+            request.IsActive);
+
+        if (!success)
         {
-            Name = request.Name,
-            Address = request.Address,
-            PhoneNumber = request.PhoneNumber,
-            Email = request.Email,
-            IsActive = request.IsActive
-        };
+            return BadRequest(ApiResponse.ErrorResponse(ResponseCodes.Common.BadRequest));
+        }
 
-        await _clinicRepository.AddAsync(clinic);
-        await _clinicRepository.SaveChangesAsync();
-
-        return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success, MapToResponse(clinic)));
+        return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success, MapToResponse(clinic!)));
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateClinic(Guid id, [FromBody] UpdateClinicRequest request)
     {
-        var clinic = await _clinicRepository.GetByIdAsync(id);
+        var (success, errorCode, clinic) = await _clinicService.UpdateClinicAsync(
+            id,
+            request.Name,
+            request.Address,
+            request.PhoneNumber,
+            request.Email,
+            request.IsActive);
 
-        if (clinic == null)
+        if (!success)
         {
             return NotFound(ApiResponse.ErrorResponse(ResponseCodes.Common.NotFound));
         }
 
-        clinic.Name = request.Name;
-        clinic.Address = request.Address;
-        clinic.PhoneNumber = request.PhoneNumber;
-        clinic.Email = request.Email;
-        clinic.IsActive = request.IsActive;
-
-        await _clinicRepository.UpdateAsync(clinic);
-        await _clinicRepository.SaveChangesAsync();
-
-        return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success, MapToResponse(clinic)));
+        return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success, MapToResponse(clinic!)));
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteClinic(Guid id)
     {
-        var clinic = await _clinicRepository.GetByIdAsync(id);
+        var (success, errorCode) = await _clinicService.DeleteClinicAsync(id);
 
-        if (clinic == null)
+        if (!success)
         {
             return NotFound(ApiResponse.ErrorResponse(ResponseCodes.Common.NotFound));
         }
-
-        await _clinicRepository.SoftDeleteAsync(clinic);
-        await _clinicRepository.SaveChangesAsync();
 
         return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success));
     }

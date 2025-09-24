@@ -12,22 +12,23 @@ namespace ClinicManagement.API.Controllers;
 [Route("api/[controller]")]
 public class PatientsController : ControllerBase
 {
-    private readonly IPatientRepository _patientRepository;
+    private readonly IPatientService _patientService;
+    private readonly IClinicContext _clinicContext;
 
-    public PatientsController(IPatientRepository patientRepository)
+    public PatientsController(IPatientService patientService, IClinicContext clinicContext)
     {
-        _patientRepository = patientRepository;
+        _patientService = patientService;
+        _clinicContext = clinicContext;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetPatients([FromQuery] string? search, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        var patients = await _patientRepository.SearchPatientsAsync(search, page, pageSize);
-        var total = await _patientRepository.GetTotalCountAsync(search);
+        var (items, total) = await _patientService.SearchPatientsAsync(search, page, pageSize);
 
         var response = new
         {
-            items = patients.Select(p => MapToResponse(p)),
+            items = items.Select(p => MapToResponse(p)),
             total,
             page,
             pageSize
@@ -39,7 +40,7 @@ public class PatientsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetPatient(Guid id)
     {
-        var patient = await _patientRepository.GetByIdAsync(id);
+        var patient = await _patientService.GetPatientByIdAsync(id);
 
         if (patient == null)
         {
@@ -50,89 +51,80 @@ public class PatientsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreatePatient([FromBody] CreatePatientRequest request, [FromServices] IClinicContext clinicContext)
+    public async Task<IActionResult> CreatePatient([FromBody] CreatePatientRequest request)
     {
-        var clinicId = clinicContext.CurrentClinicId!.Value;
-        var clinicPatientCount = await _patientRepository.GetClinicPatientCountAsync(clinicId);
-        var patientCount = clinicPatientCount + 1;
-        
-        var patient = new Patient
+        var clinicId = _clinicContext.CurrentClinicId!.Value;
+
+        var (success, errorCode, patient) = await _patientService.CreatePatientAsync(
+            clinicId,
+            request.FullName,
+            request.PhoneNumber,
+            request.Email,
+            request.DateOfBirth,
+            request.Address,
+            request.Gender,
+            request.Allergies,
+            request.ChronicConditions,
+            request.EmergencyContactName,
+            request.EmergencyContactPhone,
+            request.BloodType,
+            request.IdNumber,
+            request.InsuranceNumber,
+            request.InsuranceProvider,
+            request.Occupation,
+            request.ReferralSource,
+            request.ReceivePromotions,
+            request.Notes);
+
+        if (!success)
         {
-            PatientCode = $"PT{patientCount:D5}",
-            FullName = request.FullName,
-            PhoneNumber = request.PhoneNumber,
-            Email = request.Email,
-            DateOfBirth = request.DateOfBirth,
-            Address = request.Address,
-            Gender = request.Gender,
-            Allergies = request.Allergies,
-            ChronicConditions = request.ChronicConditions,
-            EmergencyContactName = request.EmergencyContactName,
-            EmergencyContactPhone = request.EmergencyContactPhone,
-            BloodType = request.BloodType,
-            IdNumber = request.IdNumber,
-            InsuranceNumber = request.InsuranceNumber,
-            InsuranceProvider = request.InsuranceProvider,
-            Occupation = request.Occupation,
-            ReferralSource = request.ReferralSource,
-            FirstVisitDate = DateTime.UtcNow,
-            ReceivePromotions = request.ReceivePromotions,
-            Notes = request.Notes
-        };
+            return BadRequest(ApiResponse.ErrorResponse(ResponseCodes.Common.BadRequest));
+        }
 
-        await _patientRepository.AddAsync(patient);
-        await _patientRepository.SaveChangesAsync();
-
-        return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success, MapToResponse(patient)));
+        return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success, MapToResponse(patient!)));
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdatePatient(Guid id, [FromBody] UpdatePatientRequest request)
     {
-        var patient = await _patientRepository.GetByIdAsync(id);
+        var (success, errorCode, patient) = await _patientService.UpdatePatientAsync(
+            id,
+            request.FullName,
+            request.PhoneNumber,
+            request.Email,
+            request.DateOfBirth,
+            request.Address,
+            request.Gender,
+            request.Allergies,
+            request.ChronicConditions,
+            request.EmergencyContactName,
+            request.EmergencyContactPhone,
+            request.BloodType,
+            request.IdNumber,
+            request.InsuranceNumber,
+            request.InsuranceProvider,
+            request.Occupation,
+            request.ReferralSource,
+            request.ReceivePromotions,
+            request.Notes);
 
-        if (patient == null)
+        if (!success)
         {
             return NotFound(ApiResponse.ErrorResponse(ResponseCodes.Common.NotFound));
         }
 
-        patient.FullName = request.FullName;
-        patient.PhoneNumber = request.PhoneNumber;
-        patient.Email = request.Email;
-        patient.DateOfBirth = request.DateOfBirth;
-        patient.Address = request.Address;
-        patient.Gender = request.Gender;
-        patient.Allergies = request.Allergies;
-        patient.ChronicConditions = request.ChronicConditions;
-        patient.EmergencyContactName = request.EmergencyContactName;
-        patient.EmergencyContactPhone = request.EmergencyContactPhone;
-        patient.BloodType = request.BloodType;
-        patient.IdNumber = request.IdNumber;
-        patient.InsuranceNumber = request.InsuranceNumber;
-        patient.InsuranceProvider = request.InsuranceProvider;
-        patient.Occupation = request.Occupation;
-        patient.ReferralSource = request.ReferralSource;
-        patient.ReceivePromotions = request.ReceivePromotions;
-        patient.Notes = request.Notes;
-
-        await _patientRepository.UpdateAsync(patient);
-        await _patientRepository.SaveChangesAsync();
-
-        return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success, MapToResponse(patient)));
+        return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success, MapToResponse(patient!)));
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeletePatient(Guid id)
     {
-        var patient = await _patientRepository.GetByIdAsync(id);
+        var (success, errorCode) = await _patientService.DeletePatientAsync(id);
 
-        if (patient == null)
+        if (!success)
         {
             return NotFound(ApiResponse.ErrorResponse(ResponseCodes.Common.NotFound));
         }
-
-        await _patientRepository.SoftDeleteAsync(patient);
-        await _patientRepository.SaveChangesAsync();
 
         return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success));
     }

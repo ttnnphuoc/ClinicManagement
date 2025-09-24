@@ -81,6 +81,10 @@ builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IStaffService, StaffService>();
+builder.Services.AddScoped<IPatientService, PatientService>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<IClinicService, ClinicService>();
+builder.Services.AddScoped<IMedicalServiceService, MedicalServiceService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

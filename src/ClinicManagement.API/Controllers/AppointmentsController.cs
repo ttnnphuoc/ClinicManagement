@@ -12,22 +12,19 @@ namespace ClinicManagement.API.Controllers;
 [Route("api/[controller]")]
 public class AppointmentsController : ControllerBase
 {
-    private readonly IAppointmentRepository _appointmentRepository;
+    private readonly IAppointmentService _appointmentService;
     private readonly IClinicContext _clinicContext;
 
-    public AppointmentsController(IAppointmentRepository appointmentRepository, IClinicContext clinicContext)
+    public AppointmentsController(IAppointmentService appointmentService, IClinicContext clinicContext)
     {
-        _appointmentRepository = appointmentRepository;
+        _appointmentService = appointmentService;
         _clinicContext = clinicContext;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAppointments([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate)
     {
-        var start = startDate ?? DateTime.UtcNow.Date;
-        var end = endDate ?? DateTime.UtcNow.Date.AddMonths(1);
-
-        var appointments = await _appointmentRepository.GetByDateRangeAsync(start, end);
+        var appointments = await _appointmentService.GetAppointmentsByDateRangeAsync(startDate, endDate);
         var response = appointments.Select(a => MapToResponse(a));
 
         return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success, response));
@@ -36,7 +33,7 @@ public class AppointmentsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetAppointment(Guid id)
     {
-        var appointment = await _appointmentRepository.GetByIdWithDetailsAsync(id);
+        var appointment = await _appointmentService.GetAppointmentByIdAsync(id);
 
         if (appointment == null)
         {
@@ -49,74 +46,58 @@ public class AppointmentsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateAppointment([FromBody] CreateAppointmentRequest request)
     {
-        var isAvailable = await _appointmentRepository.IsTimeSlotAvailableAsync(request.StaffId, request.AppointmentDate);
-        
-        if (!isAvailable)
-        {
-            return BadRequest(ApiResponse.ErrorResponse(ResponseCodes.Appointment.TimeSlotNotAvailable));
-        }
-
         var clinicId = _clinicContext.CurrentClinicId!.Value;
 
-        var appointment = new Appointment
+        var (success, errorCode, appointment) = await _appointmentService.CreateAppointmentAsync(
+            clinicId,
+            request.PatientId,
+            request.StaffId,
+            request.AppointmentDate,
+            request.Status,
+            request.Notes);
+
+        if (!success)
         {
-            ClinicId = clinicId,
-            PatientId = request.PatientId,
-            StaffId = request.StaffId,
-            AppointmentDate = request.AppointmentDate,
-            Status = request.Status,
-            Notes = request.Notes
-        };
+            return errorCode == "APPOINTMENT_TIME_SLOT_NOT_AVAILABLE"
+                ? BadRequest(ApiResponse.ErrorResponse(ResponseCodes.Appointment.TimeSlotNotAvailable))
+                : BadRequest(ApiResponse.ErrorResponse(ResponseCodes.Common.BadRequest));
+        }
 
-        await _appointmentRepository.AddAsync(appointment);
-        await _appointmentRepository.SaveChangesAsync();
-
-        var created = await _appointmentRepository.GetByIdWithDetailsAsync(appointment.Id);
-        return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success, MapToResponse(created!)));
+        return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success, MapToResponse(appointment!)));
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateAppointment(Guid id, [FromBody] UpdateAppointmentRequest request)
     {
-        var appointment = await _appointmentRepository.GetByIdAsync(id);
+        var (success, errorCode, appointment) = await _appointmentService.UpdateAppointmentAsync(
+            id,
+            request.PatientId,
+            request.StaffId,
+            request.AppointmentDate,
+            request.Status,
+            request.Notes);
 
-        if (appointment == null)
+        if (!success)
         {
-            return NotFound(ApiResponse.ErrorResponse(ResponseCodes.Common.NotFound));
+            return errorCode == "APPOINTMENT_TIME_SLOT_NOT_AVAILABLE"
+                ? BadRequest(ApiResponse.ErrorResponse(ResponseCodes.Appointment.TimeSlotNotAvailable))
+                : errorCode == "NOT_FOUND"
+                ? NotFound(ApiResponse.ErrorResponse(ResponseCodes.Common.NotFound))
+                : BadRequest(ApiResponse.ErrorResponse(ResponseCodes.Common.BadRequest));
         }
 
-        var isAvailable = await _appointmentRepository.IsTimeSlotAvailableAsync(request.StaffId, request.AppointmentDate, id);
-        
-        if (!isAvailable)
-        {
-            return BadRequest(ApiResponse.ErrorResponse(ResponseCodes.Appointment.TimeSlotNotAvailable));
-        }
-
-        appointment.PatientId = request.PatientId;
-        appointment.StaffId = request.StaffId;
-        appointment.AppointmentDate = request.AppointmentDate;
-        appointment.Status = request.Status;
-        appointment.Notes = request.Notes;
-
-        await _appointmentRepository.UpdateAsync(appointment);
-        await _appointmentRepository.SaveChangesAsync();
-
-        var updated = await _appointmentRepository.GetByIdWithDetailsAsync(id);
-        return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success, MapToResponse(updated!)));
+        return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success, MapToResponse(appointment!)));
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAppointment(Guid id)
     {
-        var appointment = await _appointmentRepository.GetByIdAsync(id);
+        var (success, errorCode) = await _appointmentService.DeleteAppointmentAsync(id);
 
-        if (appointment == null)
+        if (!success)
         {
             return NotFound(ApiResponse.ErrorResponse(ResponseCodes.Common.NotFound));
         }
-
-        await _appointmentRepository.SoftDeleteAsync(appointment);
-        await _appointmentRepository.SaveChangesAsync();
 
         return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success));
     }
