@@ -33,6 +33,14 @@ public class StaffRepository : Repository<Staff>, IStaffRepository
             .AnyAsync(sc => sc.StaffId == staffId && sc.ClinicId == clinicId && sc.IsActive);
     }
 
+    public async Task<List<Guid>> GetStaffClinicIdsAsync(Guid staffId)
+    {
+        return await _context.StaffClinics
+            .Where(sc => sc.StaffId == staffId && sc.IsActive)
+            .Select(sc => sc.ClinicId)
+            .ToListAsync();
+    }
+
     public async Task<Staff?> GetByIdWithClinicsAsync(Guid id)
     {
         return await _dbSet
