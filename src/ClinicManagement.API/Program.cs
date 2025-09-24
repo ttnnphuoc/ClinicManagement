@@ -35,6 +35,43 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddAuthorization(options =>
+{
+    // Role-based policies
+    options.AddPolicy(ClinicManagement.API.Constants.Policies.SuperAdminOnly, policy => policy.RequireRole("SuperAdmin"));
+    options.AddPolicy(ClinicManagement.API.Constants.Policies.ClinicManagerOnly, policy => policy.RequireRole("ClinicManager"));
+    options.AddPolicy(ClinicManagement.API.Constants.Policies.DoctorOnly, policy => policy.RequireRole("Doctor"));
+    options.AddPolicy(ClinicManagement.API.Constants.Policies.NurseOnly, policy => policy.RequireRole("Nurse"));
+    options.AddPolicy(ClinicManagement.API.Constants.Policies.ReceptionistOnly, policy => policy.RequireRole("Receptionist"));
+    options.AddPolicy(ClinicManagement.API.Constants.Policies.AccountantOnly, policy => policy.RequireRole("Accountant"));
+    options.AddPolicy(ClinicManagement.API.Constants.Policies.PharmacistOnly, policy => policy.RequireRole("Pharmacist"));
+
+    // Combined policies
+    options.AddPolicy(ClinicManagement.API.Constants.Policies.ManageClinic, policy => 
+        policy.RequireRole("SuperAdmin", "ClinicManager"));
+    
+    options.AddPolicy(ClinicManagement.API.Constants.Policies.ManagePatients, policy => 
+        policy.RequireRole("SuperAdmin", "ClinicManager", "Doctor", "Nurse", "Receptionist"));
+    
+    options.AddPolicy(ClinicManagement.API.Constants.Policies.ManageAppointments, policy => 
+        policy.RequireRole("SuperAdmin", "ClinicManager", "Doctor", "Nurse", "Receptionist"));
+    
+    options.AddPolicy(ClinicManagement.API.Constants.Policies.ViewPatientRecords, policy => 
+        policy.RequireRole("SuperAdmin", "ClinicManager", "Doctor", "Nurse"));
+    
+    options.AddPolicy(ClinicManagement.API.Constants.Policies.ManageServices, policy => 
+        policy.RequireRole("SuperAdmin", "ClinicManager"));
+    
+    options.AddPolicy(ClinicManagement.API.Constants.Policies.ManageFinance, policy => 
+        policy.RequireRole("SuperAdmin", "ClinicManager", "Accountant"));
+    
+    options.AddPolicy(ClinicManagement.API.Constants.Policies.ManageInventory, policy => 
+        policy.RequireRole("SuperAdmin", "ClinicManager", "Pharmacist"));
+    
+    options.AddPolicy(ClinicManagement.API.Constants.Policies.ManageStaff, policy => 
+        policy.RequireRole("SuperAdmin", "ClinicManager"));
+});
+
 builder.Services.AddScoped<IClinicContext, ClinicContext>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IStaffRepository, StaffRepository>();

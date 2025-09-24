@@ -7,7 +7,7 @@ using ClinicManagement.Core.Interfaces;
 
 namespace ClinicManagement.API.Controllers;
 
-[Authorize]
+[Authorize(Policy = Policies.ManageAppointments)]
 [ApiController]
 [Route("api/[controller]")]
 public class AppointmentsController : ControllerBase

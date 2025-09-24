@@ -7,7 +7,7 @@ namespace ClinicManagement.Infrastructure.Repositories;
 
 public class AppointmentRepository : Repository<Appointment>, IAppointmentRepository
 {
-    public AppointmentRepository(ApplicationDbContext context) : base(context)
+    public AppointmentRepository(ApplicationDbContext context, IClinicContext clinicContext) : base(context, clinicContext)
     {
     }
 

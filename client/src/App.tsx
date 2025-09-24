@@ -8,6 +8,7 @@ import ClinicSelection from './pages/ClinicSelection';
 import Patients from './pages/Patients';
 import Appointments from './pages/Appointments';
 import Services from './pages/Services';
+import Clinics from './pages/Clinics';
 import ProtectedRoute from './components/ProtectedRoute';
 import './i18n/config';
 
@@ -32,6 +33,7 @@ function App() {
               <Route path="patients" element={<Patients />} />
               <Route path="appointments" element={<Appointments />} />
               <Route path="services" element={<Services />} />
+              <Route path="clinics" element={<Clinics />} />
               <Route path="transactions" element={<div>Transactions Page</div>} />
               <Route path="inventory" element={<div>Inventory Page</div>} />
               <Route path="staff" element={<div>Staff Page</div>} />

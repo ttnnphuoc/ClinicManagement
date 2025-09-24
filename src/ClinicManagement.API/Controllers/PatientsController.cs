@@ -7,7 +7,7 @@ using ClinicManagement.Core.Interfaces;
 
 namespace ClinicManagement.API.Controllers;
 
-[Authorize]
+[Authorize(Policy = Policies.ManagePatients)]
 [ApiController]
 [Route("api/[controller]")]
 public class PatientsController : ControllerBase

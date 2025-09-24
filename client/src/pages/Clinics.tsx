@@ -1,28 +1,28 @@
 import { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, InputNumber, Switch, App, Space, Popconfirm } from 'antd';
+import { Table, Button, Modal, Form, Input, Switch, App, Space, Popconfirm } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-import { serviceService, type Service, type CreateServiceRequest } from '../services/serviceService';
+import { clinicService, type Clinic, type CreateClinicRequest } from '../services/clinicService';
 
-const Services = () => {
+const Clinics = () => {
   const { t } = useTranslation();
   const { message } = App.useApp();
-  const [services, setServices] = useState<Service[]>([]);
+  const [clinics, setClinics] = useState<Clinic[]>([]);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingService, setEditingService] = useState<Service | null>(null);
+  const [editingClinic, setEditingClinic] = useState<Clinic | null>(null);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [pageSize] = useState(10);
   const [searchText, setSearchText] = useState('');
   const [form] = Form.useForm();
 
-  const fetchServices = async () => {
+  const fetchClinics = async () => {
     setLoading(true);
     try {
-      const response = await serviceService.getServices(searchText, page, pageSize);
+      const response = await clinicService.getClinics(searchText, page, pageSize);
       if (response.success && response.data) {
-        setServices(response.data.items);
+        setClinics(response.data.items);
         setTotal(response.data.total);
       }
     } catch (error) {
@@ -33,27 +33,27 @@ const Services = () => {
   };
 
   useEffect(() => {
-    fetchServices();
+    fetchClinics();
   }, [page, searchText]);
 
   const handleAdd = () => {
-    setEditingService(null);
+    setEditingClinic(null);
     form.resetFields();
     setIsModalOpen(true);
   };
 
-  const handleEdit = (record: Service) => {
-    setEditingService(record);
+  const handleEdit = (record: Clinic) => {
+    setEditingClinic(record);
     form.setFieldsValue(record);
     setIsModalOpen(true);
   };
 
   const handleDelete = async (id: string) => {
     try {
-      const response = await serviceService.deleteService(id);
+      const response = await clinicService.deleteClinic(id);
       if (response.success) {
-        message.success(t('services.deleteSuccess'));
-        fetchServices();
+        message.success(t('clinics.deleteSuccess'));
+        fetchClinics();
       }
     } catch (error: any) {
       const errorCode = error.response?.data?.code || 'UNKNOWN_ERROR';
@@ -61,22 +61,22 @@ const Services = () => {
     }
   };
 
-  const handleSubmit = async (values: CreateServiceRequest) => {
+  const handleSubmit = async (values: CreateClinicRequest) => {
     try {
-      if (editingService) {
-        const response = await serviceService.updateService(editingService.id, values);
+      if (editingClinic) {
+        const response = await clinicService.updateClinic(editingClinic.id, values);
         if (response.success) {
-          message.success(t('services.updateSuccess'));
+          message.success(t('clinics.updateSuccess'));
         }
       } else {
-        const response = await serviceService.createService(values);
+        const response = await clinicService.createClinic(values);
         if (response.success) {
-          message.success(t('services.createSuccess'));
+          message.success(t('clinics.createSuccess'));
         }
       }
       setIsModalOpen(false);
       form.resetFields();
-      fetchServices();
+      fetchClinics();
     } catch (error: any) {
       const errorCode = error.response?.data?.code || 'UNKNOWN_ERROR';
       message.error(t(`errors.${errorCode}`));
@@ -85,41 +85,39 @@ const Services = () => {
 
   const columns = [
     {
-      title: t('services.serviceName'),
+      title: t('clinics.name'),
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: t('services.description'),
-      dataIndex: 'description',
-      key: 'description',
+      title: t('clinics.address'),
+      dataIndex: 'address',
+      key: 'address',
     },
     {
-      title: t('services.price'),
-      dataIndex: 'price',
-      key: 'price',
-      render: (price: number) => `${Number(price).toLocaleString()} VND`,
+      title: t('clinics.phoneNumber'),
+      dataIndex: 'phoneNumber',
+      key: 'phoneNumber',
     },
     {
-      title: t('services.duration'),
-      dataIndex: 'durationMinutes',
-      key: 'durationMinutes',
-      render: (minutes: number) => `${minutes} ${t('services.minutes')}`,
+      title: t('clinics.email'),
+      dataIndex: 'email',
+      key: 'email',
     },
     {
-      title: t('services.status'),
+      title: t('clinics.status'),
       dataIndex: 'isActive',
       key: 'isActive',
       render: (isActive: boolean) => (
         <span style={{ color: isActive ? 'green' : 'red' }}>
-          {isActive ? t('services.active') : t('services.inactive')}
+          {isActive ? t('clinics.active') : t('clinics.inactive')}
         </span>
       ),
     },
     {
       title: t('common.actions'),
       key: 'actions',
-      render: (_: any, record: Service) => (
+      render: (_: any, record: Clinic) => (
         <Space>
           <Button
             type="link"
@@ -129,7 +127,7 @@ const Services = () => {
             {t('common.edit')}
           </Button>
           <Popconfirm
-            title={t('services.deleteConfirm')}
+            title={t('clinics.deleteConfirm')}
             onConfirm={() => handleDelete(record.id)}
             okText={t('common.yes')}
             cancelText={t('common.no')}
@@ -147,19 +145,19 @@ const Services = () => {
     <div>
       <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between' }}>
         <Input.Search
-          placeholder={t('services.searchPlaceholder')}
+          placeholder={t('clinics.searchPlaceholder')}
           onSearch={setSearchText}
           style={{ width: 300 }}
           allowClear
         />
         <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-          {t('services.addService')}
+          {t('clinics.addClinic')}
         </Button>
       </div>
 
       <Table
         columns={columns}
-        dataSource={services}
+        dataSource={clinics}
         rowKey="id"
         loading={loading}
         pagination={{
@@ -172,7 +170,7 @@ const Services = () => {
       />
 
       <Modal
-        title={editingService ? t('services.editService') : t('services.addService')}
+        title={editingClinic ? t('clinics.editClinic') : t('clinics.addClinic')}
         open={isModalOpen}
         onCancel={() => {
           setIsModalOpen(false);
@@ -189,45 +187,38 @@ const Services = () => {
         >
           <Form.Item
             name="name"
-            label={t('services.serviceName')}
-            rules={[{ required: true, message: t('services.nameRequired') }]}
+            label={t('clinics.name')}
+            rules={[{ required: true, message: t('clinics.nameRequired') }]}
           >
             <Input />
           </Form.Item>
 
-          <Form.Item name="description" label={t('services.description')}>
-            <Input.TextArea rows={3} />
+          <Form.Item
+            name="address"
+            label={t('clinics.address')}
+            rules={[{ required: true, message: t('clinics.addressRequired') }]}
+          >
+            <Input.TextArea rows={2} />
           </Form.Item>
 
           <Form.Item
-            name="price"
-            label={t('services.price')}
-            rules={[{ required: true, message: t('services.priceRequired') }]}
+            name="phoneNumber"
+            label={t('clinics.phoneNumber')}
+            rules={[{ required: true, message: t('clinics.phoneRequired') }]}
           >
-            <InputNumber
-              style={{ width: '100%' }}
-              min={0}
-              controls={false}
-              formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-              parser={(value) => value?.replace(/[^\d]/g, '') as any}
-              addonAfter="VND"
-            />
+            <Input />
           </Form.Item>
 
           <Form.Item
-            name="durationMinutes"
-            label={t('services.duration')}
-            rules={[{ required: true, message: t('services.durationRequired') }]}
+            name="email"
+            label={t('clinics.email')}
+            rules={[{ type: 'email', message: t('patients.emailInvalid') }]}
           >
-            <InputNumber
-              style={{ width: '100%' }}
-              min={1}
-              addonAfter={t('services.minutes')}
-            />
+            <Input />
           </Form.Item>
 
-          <Form.Item name="isActive" label={t('services.status')} valuePropName="checked">
-            <Switch checkedChildren={t('services.active')} unCheckedChildren={t('services.inactive')} />
+          <Form.Item name="isActive" label={t('clinics.status')} valuePropName="checked">
+            <Switch checkedChildren={t('clinics.active')} unCheckedChildren={t('clinics.inactive')} />
           </Form.Item>
 
           <Form.Item>
@@ -249,4 +240,4 @@ const Services = () => {
   );
 };
 
-export default Services;
+export default Clinics;

@@ -7,7 +7,7 @@ namespace ClinicManagement.Infrastructure.Repositories;
 
 public class ServiceRepository : Repository<Service>, IServiceRepository
 {
-    public ServiceRepository(ApplicationDbContext context) : base(context)
+    public ServiceRepository(ApplicationDbContext context, IClinicContext clinicContext) : base(context, clinicContext)
     {
     }
 

@@ -21,6 +21,7 @@
     "patients": "Bệnh nhân",
     "appointments": "Lịch hẹn",
     "services": "Dịch vụ",
+    "clinics": "Phòng khám",
     "transactions": "Thu chi",
     "inventory": "Kho",
     "staff": "Nhân viên"
@@ -130,6 +131,26 @@
     "role": "Vai trò",
     "active": "Hoạt động",
     "inactive": "Ngưng hoạt động"
+  },
+  "clinics": {
+    "title": "Phòng khám",
+    "addClinic": "Thêm phòng khám",
+    "editClinic": "Sửa phòng khám",
+    "name": "Tên phòng khám",
+    "address": "Địa chỉ",
+    "phoneNumber": "Số điện thoại",
+    "email": "Email",
+    "status": "Trạng thái",
+    "active": "Hoạt động",
+    "inactive": "Ngưng hoạt động",
+    "searchPlaceholder": "Tìm kiếm phòng khám...",
+    "deleteConfirm": "Bạn có chắc muốn xóa phòng khám này?",
+    "deleteSuccess": "Xóa phòng khám thành công",
+    "createSuccess": "Tạo phòng khám thành công",
+    "updateSuccess": "Cập nhật phòng khám thành công",
+    "nameRequired": "Tên phòng khám là bắt buộc",
+    "addressRequired": "Địa chỉ là bắt buộc",
+    "phoneRequired": "Số điện thoại là bắt buộc"
   },
   "auth": {
     "login": "Đăng nhập",

@@ -8,6 +8,7 @@ import {
   DollarOutlined,
   InboxOutlined,
   TeamOutlined,
+  ShopOutlined,
 } from '@ant-design/icons';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -48,6 +49,11 @@ const MainLayout = () => {
       key: '/services',
       icon: <MedicineBoxOutlined />,
       label: t('menu.services'),
+    },
+    {
+      key: '/clinics',
+      icon: <ShopOutlined />,
+      label: t('menu.clinics'),
     },
     {
       key: '/transactions',

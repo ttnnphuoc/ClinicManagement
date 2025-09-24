@@ -7,7 +7,7 @@ using ClinicManagement.Core.Interfaces;
 
 namespace ClinicManagement.API.Controllers;
 
-[Authorize]
+[Authorize(Policy = Policies.ManageServices)]
 [ApiController]
 [Route("api/[controller]")]
 public class ServicesController : ControllerBase
@@ -63,7 +63,12 @@ public class ServicesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateService([FromBody] CreateServiceRequest request)
     {
-        var clinicId = _clinicContext.CurrentClinicId!.Value;
+        if (!_clinicContext.CurrentClinicId.HasValue)
+        {
+            return BadRequest(ApiResponse.ErrorResponse(ResponseCodes.Auth.Unauthorized));
+        }
+
+        var clinicId = _clinicContext.CurrentClinicId.Value;
 
         var service = new Service
         {

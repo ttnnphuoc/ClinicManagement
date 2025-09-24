@@ -37,8 +37,8 @@ public class AuthService : IAuthService
             .Select(sc => sc.ClinicId)
             .ToList();
 
-        var token = GenerateJwtToken(staff.Id.ToString(), staff.Email, staff.Role);
-        return (true, token, staff.FullName, staff.Email, staff.Role, clinicIds);
+        var token = GenerateJwtToken(staff.Id.ToString(), staff.Email, staff.Role.ToString());
+        return (true, token, staff.FullName, staff.Email, staff.Role.ToString(), clinicIds);
     }
 
     public async Task<(bool Success, string Token, string FullName, string Email, string Role, Guid ClinicId)> LoginWithClinicAsync(string emailOrPhone, string password, Guid clinicId)
@@ -61,8 +61,8 @@ public class AuthService : IAuthService
             return (false, string.Empty, string.Empty, string.Empty, string.Empty, Guid.Empty);
         }
 
-        var token = GenerateJwtToken(staff.Id.ToString(), staff.Email, staff.Role, clinicId.ToString());
-        return (true, token, staff.FullName, staff.Email, staff.Role, clinicId);
+        var token = GenerateJwtToken(staff.Id.ToString(), staff.Email, staff.Role.ToString(), clinicId.ToString());
+        return (true, token, staff.FullName, staff.Email, staff.Role.ToString(), clinicId);
     }
 
     public string HashPassword(string password)
