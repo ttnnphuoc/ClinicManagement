@@ -105,7 +105,10 @@
     "updateSuccess": "Service updated successfully",
     "nameRequired": "Service name is required",
     "priceRequired": "Price is required",
-    "durationRequired": "Duration is required"
+    "durationRequired": "Duration is required",
+    "clinic": "Clinic",
+    "selectClinic": "Select clinic",
+    "clinicRequired": "Clinic is required"
   },
   "transactions": {
     "title": "Revenue/Expense",

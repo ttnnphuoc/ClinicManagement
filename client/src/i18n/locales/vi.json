@@ -105,7 +105,10 @@
     "updateSuccess": "Cập nhật dịch vụ thành công",
     "nameRequired": "Tên dịch vụ là bắt buộc",
     "priceRequired": "Giá là bắt buộc",
-    "durationRequired": "Thời lượng là bắt buộc"
+    "durationRequired": "Thời lượng là bắt buộc",
+    "clinic": "Phòng khám",
+    "selectClinic": "Chọn phòng khám",
+    "clinicRequired": "Phòng khám là bắt buộc"
   },
   "transactions": {
     "title": "Thu chi",
