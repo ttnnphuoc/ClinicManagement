@@ -19,4 +19,9 @@ public static class ResponseCodes
         public const string InternalError = "INTERNAL_ERROR";
         public const string ValidationError = "VALIDATION_ERROR";
     }
+
+    public static class Appointment
+    {
+        public const string TimeSlotNotAvailable = "APPOINTMENT_TIME_SLOT_NOT_AVAILABLE";
+    }
 }

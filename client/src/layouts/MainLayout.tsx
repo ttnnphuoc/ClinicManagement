@@ -21,6 +21,13 @@ const MainLayout = () => {
   const location = useLocation();
   const { t } = useTranslation();
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('currentClinic');
+    navigate('/login');
+  };
+
   const menuItems = [
     {
       key: '/',
@@ -103,7 +110,7 @@ const MainLayout = () => {
           </h1>
           <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
             <LanguageSwitcher />
-            <Button type="text" danger onClick={() => navigate('/login')}>
+            <Button type="text" danger onClick={handleLogout}>
               {t('auth.logout')}
             </Button>
           </div>

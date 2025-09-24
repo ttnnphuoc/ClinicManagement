@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { Table, Button, Input, Space, Modal, message, Popconfirm } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-import { patientService, Patient } from '../services/patientService';
+import { patientService } from '../services/patientService';
+import type { Patient } from '../services/patientService';
 import PatientForm from '../components/PatientForm';
 
 const Patients = () => {

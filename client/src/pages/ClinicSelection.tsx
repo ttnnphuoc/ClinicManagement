@@ -3,7 +3,8 @@ import { Card, Row, Col, Typography, Spin, message } from 'antd';
 import { ShopOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { authService, ClinicInfo } from '../services/authService';
+import { authService } from '../services/authService';
+import type { ClinicInfo } from '../services/authService';
 
 const { Title, Text } = Typography;
 

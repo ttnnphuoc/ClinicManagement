@@ -45,6 +45,8 @@
     "notes": "Ghi chú",
     "medicalInfo": "Thông tin y tế",
     "additionalInfo": "Thông tin bổ sung",
+    "insuranceInfo": "Thông tin bảo hiểm",
+    "emergencyContact": "Liên hệ khẩn cấp",
     "allergies": "Dị ứng",
     "chronicConditions": "Bệnh mãn tính",
     "emergencyContactName": "Tên người liên hệ khẩn cấp",
@@ -77,15 +79,32 @@
     "status": "Trạng thái",
     "scheduled": "Đã đặt",
     "completed": "Hoàn thành",
-    "cancelled": "Đã hủy"
+    "cancelled": "Đã hủy",
+    "createSuccess": "Tạo lịch hẹn thành công",
+    "services": "Dịch vụ",
+    "selectServices": "Chọn dịch vụ",
+    "servicesRequired": "Vui lòng chọn ít nhất một dịch vụ"
   },
   "services": {
     "title": "Dịch vụ",
     "addService": "Thêm dịch vụ",
+    "editService": "Sửa dịch vụ",
     "serviceName": "Tên dịch vụ",
     "description": "Mô tả",
     "price": "Giá",
-    "duration": "Thời lượng (phút)"
+    "duration": "Thời lượng",
+    "minutes": "phút",
+    "status": "Trạng thái",
+    "active": "Hoạt động",
+    "inactive": "Ngưng hoạt động",
+    "searchPlaceholder": "Tìm kiếm dịch vụ...",
+    "deleteConfirm": "Bạn có chắc muốn xóa dịch vụ này?",
+    "deleteSuccess": "Xóa dịch vụ thành công",
+    "createSuccess": "Tạo dịch vụ thành công",
+    "updateSuccess": "Cập nhật dịch vụ thành công",
+    "nameRequired": "Tên dịch vụ là bắt buộc",
+    "priceRequired": "Giá là bắt buộc",
+    "durationRequired": "Thời lượng là bắt buộc"
   },
   "transactions": {
     "title": "Thu chi",
@@ -144,7 +163,8 @@
     "INTERNAL_ERROR": "Lỗi máy chủ nội bộ",
     "VALIDATION_ERROR": "Xác thực thất bại",
     "NETWORK_ERROR": "Lỗi kết nối. Vui lòng thử lại.",
-    "UNKNOWN_ERROR": "Đã xảy ra lỗi. Vui lòng thử lại."
+    "UNKNOWN_ERROR": "Đã xảy ra lỗi. Vui lòng thử lại.",
+    "APPOINTMENT_TIME_SLOT_NOT_AVAILABLE": "Khung giờ này đã được đặt. Vui lòng chọn thời gian khác."
   },
   "success": {
     "AUTH_LOGIN_SUCCESS": "Đăng nhập thành công!",
