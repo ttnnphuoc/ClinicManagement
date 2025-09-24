@@ -4,6 +4,8 @@ import MainLayout from './layouts/MainLayout';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
+import ClinicSelection from './pages/ClinicSelection';
+import Patients from './pages/Patients';
 import './i18n/config';
 
 function App() {
@@ -19,10 +21,11 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/select-clinic" element={<ClinicSelection />} />
           
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Dashboard />} />
-            <Route path="patients" element={<div>Patients Page</div>} />
+            <Route path="patients" element={<Patients />} />
             <Route path="appointments" element={<div>Appointments Page</div>} />
             <Route path="services" element={<div>Services Page</div>} />
             <Route path="transactions" element={<div>Transactions Page</div>} />

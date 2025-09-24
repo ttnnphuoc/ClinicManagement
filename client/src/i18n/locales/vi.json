@@ -11,7 +11,10 @@
     "search": "Tìm kiếm",
     "actions": "Thao tác",
     "loading": "Đang tải...",
-    "noData": "Không có dữ liệu"
+    "noData": "Không có dữ liệu",
+    "yes": "Có",
+    "no": "Không",
+    "totalItems": "Tổng {{total}} mục"
   },
   "menu": {
     "dashboard": "Trang chủ",
@@ -32,13 +35,38 @@
   "patients": {
     "title": "Bệnh nhân",
     "addPatient": "Thêm bệnh nhân",
+    "editPatient": "Sửa bệnh nhân",
     "fullName": "Họ và tên",
     "phoneNumber": "Số điện thoại",
     "email": "Email",
     "dateOfBirth": "Ngày sinh",
     "address": "Địa chỉ",
     "gender": "Giới tính",
-    "notes": "Ghi chú"
+    "notes": "Ghi chú",
+    "medicalInfo": "Thông tin y tế",
+    "additionalInfo": "Thông tin bổ sung",
+    "allergies": "Dị ứng",
+    "chronicConditions": "Bệnh mãn tính",
+    "emergencyContactName": "Tên người liên hệ khẩn cấp",
+    "emergencyContactPhone": "SĐT người liên hệ khẩn cấp",
+    "bloodType": "Nhóm máu",
+    "idNumber": "Số CMND/CCCD",
+    "insuranceNumber": "Số bảo hiểm",
+    "insuranceProvider": "Nhà cung cấp bảo hiểm",
+    "occupation": "Nghề nghiệp",
+    "referralSource": "Nguồn giới thiệu",
+    "receivePromotions": "Nhận thông tin khuyến mãi",
+    "searchPlaceholder": "Tìm kiếm theo tên, SĐT, email...",
+    "deleteConfirm": "Bạn có chắc muốn xóa bệnh nhân này?",
+    "deleteSuccess": "Xóa bệnh nhân thành công",
+    "createSuccess": "Tạo bệnh nhân thành công",
+    "updateSuccess": "Cập nhật bệnh nhân thành công",
+    "fullNameRequired": "Họ và tên là bắt buộc",
+    "phoneNumberRequired": "Số điện thoại là bắt buộc",
+    "emailInvalid": "Email không hợp lệ",
+    "male": "Nam",
+    "female": "Nữ",
+    "other": "Khác"
   },
   "appointments": {
     "title": "Lịch hẹn",
@@ -101,7 +129,10 @@
     "resetLinkSent": "Đã gửi liên kết đặt lại mật khẩu",
     "checkEmail": "Vui lòng kiểm tra email để nhận hướng dẫn đặt lại mật khẩu",
     "email": "Email",
-    "loginSuccess": "Đăng nhập thành công!"
+    "loginSuccess": "Đăng nhập thành công!",
+    "selectClinicTitle": "Chọn Phòng Khám",
+    "welcomeUser": "Xin chào, {{name}}!",
+    "clinicSelected": "Đã chọn phòng khám thành công!"
   },
   "errors": {
     "AUTH_FIELDS_REQUIRED": "Email/Số điện thoại và Mật khẩu là bắt buộc",

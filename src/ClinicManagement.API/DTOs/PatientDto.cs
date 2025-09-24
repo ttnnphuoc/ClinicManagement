@@ -1,0 +1,81 @@
+namespace ClinicManagement.API.DTOs;
+
+public class CreatePatientRequest
+{
+    public string FullName { get; set; } = string.Empty;
+    public string PhoneNumber { get; set; } = string.Empty;
+    public string? Email { get; set; }
+    public DateTime? DateOfBirth { get; set; }
+    public string? Address { get; set; }
+    public string? Gender { get; set; }
+    
+    public string? Allergies { get; set; }
+    public string? ChronicConditions { get; set; }
+    public string? EmergencyContactName { get; set; }
+    public string? EmergencyContactPhone { get; set; }
+    
+    public string? BloodType { get; set; }
+    public string? IdNumber { get; set; }
+    public string? InsuranceNumber { get; set; }
+    public string? InsuranceProvider { get; set; }
+    public string? Occupation { get; set; }
+    public string? ReferralSource { get; set; }
+    public bool ReceivePromotions { get; set; } = false;
+    
+    public string? Notes { get; set; }
+}
+
+public class UpdatePatientRequest
+{
+    public string FullName { get; set; } = string.Empty;
+    public string PhoneNumber { get; set; } = string.Empty;
+    public string? Email { get; set; }
+    public DateTime? DateOfBirth { get; set; }
+    public string? Address { get; set; }
+    public string? Gender { get; set; }
+    
+    public string? Allergies { get; set; }
+    public string? ChronicConditions { get; set; }
+    public string? EmergencyContactName { get; set; }
+    public string? EmergencyContactPhone { get; set; }
+    
+    public string? BloodType { get; set; }
+    public string? IdNumber { get; set; }
+    public string? InsuranceNumber { get; set; }
+    public string? InsuranceProvider { get; set; }
+    public string? Occupation { get; set; }
+    public string? ReferralSource { get; set; }
+    public bool ReceivePromotions { get; set; } = false;
+    
+    public string? Notes { get; set; }
+}
+
+public class PatientResponse
+{
+    public Guid Id { get; set; }
+    public Guid ClinicId { get; set; }
+    public string PatientCode { get; set; } = string.Empty;
+    public string FullName { get; set; } = string.Empty;
+    public string PhoneNumber { get; set; } = string.Empty;
+    public string? Email { get; set; }
+    public DateTime? DateOfBirth { get; set; }
+    public string? Address { get; set; }
+    public string? Gender { get; set; }
+    
+    public string? Allergies { get; set; }
+    public string? ChronicConditions { get; set; }
+    public string? EmergencyContactName { get; set; }
+    public string? EmergencyContactPhone { get; set; }
+    
+    public string? BloodType { get; set; }
+    public string? IdNumber { get; set; }
+    public string? InsuranceNumber { get; set; }
+    public string? InsuranceProvider { get; set; }
+    public string? Occupation { get; set; }
+    public string? ReferralSource { get; set; }
+    public DateTime? FirstVisitDate { get; set; }
+    public bool ReceivePromotions { get; set; }
+    
+    public string? Notes { get; set; }
+    public DateTime CreatedAt { get; set; }
+}

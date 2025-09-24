@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ClinicManagement.Core.Entities;
 using ClinicManagement.Core.Interfaces;
+using System.Linq.Expressions;
 
 namespace ClinicManagement.Infrastructure.Data;
 
@@ -66,20 +67,41 @@ public class ApplicationDbContext : DbContext
             .WithMany(p => p.TreatmentHistories)
             .HasForeignKey(t => t.PatientId);
 
+        // Configure indexes for clinic entities
+        modelBuilder.Entity<Patient>().HasIndex(e => e.ClinicId);
+        modelBuilder.Entity<Appointment>().HasIndex(e => e.ClinicId);
+        modelBuilder.Entity<Service>().HasIndex(e => e.ClinicId);
+        modelBuilder.Entity<Transaction>().HasIndex(e => e.ClinicId);
+        modelBuilder.Entity<Inventory>().HasIndex(e => e.ClinicId);
+        
+        // Configure other indexes
+        modelBuilder.Entity<StaffClinic>().HasIndex(e => new { e.StaffId, e.ClinicId }).IsUnique();
+        
+        // Note: Query filters are commented out for migration creation
+        // They can be added back after the initial migration is created
+        /*
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
-            if (typeof(IClinicEntity).IsAssignableFrom(entityType.ClrType))
+            // Only apply filters to the concrete entity types, not base types
+            if (typeof(IClinicEntity).IsAssignableFrom(entityType.ClrType) && !entityType.ClrType.IsAbstract)
             {
-                modelBuilder.Entity(entityType.ClrType)
-                    .HasIndex(nameof(IClinicEntity.ClinicId))
-                    .HasDatabaseName($"IX_{entityType.ClrType.Name}_ClinicId");
-
                 var parameter = Expression.Parameter(entityType.ClrType, "e");
                 var clinicIdProperty = Expression.Property(parameter, nameof(IClinicEntity.ClinicId));
                 var isDeletedProperty = Expression.Property(parameter, nameof(BaseEntity.IsDeleted));
                 
-                var clinicIdValue = Expression.Constant(_clinicContext.CurrentClinicId);
-                var clinicIdEquals = Expression.Equal(clinicIdProperty, clinicIdValue);
+                var clinicIdValue = Expression.Property(
+                    Expression.Constant(_clinicContext),
+                    nameof(IClinicContext.CurrentClinicId)
+                );
+                
+                // Handle nullable comparison - only filter if CurrentClinicId has a value
+                var hasValue = Expression.Property(clinicIdValue, "HasValue");
+                var value = Expression.Property(clinicIdValue, "Value");
+                var clinicIdEquals = Expression.Condition(
+                    hasValue,
+                    Expression.Equal(clinicIdProperty, value),
+                    Expression.Constant(true) // Include all records if no clinic is selected
+                );
                 var isNotDeleted = Expression.Equal(isDeletedProperty, Expression.Constant(false));
                 
                 var combinedExpression = Expression.AndAlso(clinicIdEquals, isNotDeleted);
@@ -87,7 +109,7 @@ public class ApplicationDbContext : DbContext
 
                 modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
             }
-            else if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType))
+            else if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType) && !entityType.ClrType.IsAbstract && !typeof(IClinicEntity).IsAssignableFrom(entityType.ClrType))
             {
                 var parameter = Expression.Parameter(entityType.ClrType, "e");
                 var isDeletedProperty = Expression.Property(parameter, nameof(BaseEntity.IsDeleted));
@@ -97,13 +119,6 @@ public class ApplicationDbContext : DbContext
                 modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
             }
         }
-
-        modelBuilder.Entity<Patient>().HasIndex(e => e.ClinicId);
-        modelBuilder.Entity<Appointment>().HasIndex(e => e.ClinicId);
-        modelBuilder.Entity<Service>().HasIndex(e => e.ClinicId);
-        modelBuilder.Entity<Transaction>().HasIndex(e => e.ClinicId);
-        modelBuilder.Entity<Inventory>().HasIndex(e => e.ClinicId);
-        modelBuilder.Entity<StaffClinic>().HasIndex(e => new { e.StaffId, e.ClinicId }).IsUnique();
-        modelBuilder.Entity<BaseEntity>().HasIndex(e => e.IsDeleted);
+        */
     }
 }

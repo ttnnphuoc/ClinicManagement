@@ -19,15 +19,36 @@ const Login = () => {
       });
       
       if (response.success && response.data) {
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('user', JSON.stringify({
-          fullName: response.data.fullName,
-          email: response.data.email,
-          role: response.data.role,
-        }));
+        const { data } = response;
         
-        message.success(t(`success.${response.code}`) || t('auth.loginSuccess'));
-        navigate('/');
+        if (data.clinics && data.clinics.length > 1) {
+          localStorage.setItem('tempCredentials', JSON.stringify({
+            emailOrPhone: values.emailOrPhone,
+            password: values.password,
+          }));
+          localStorage.setItem('availableClinics', JSON.stringify(data.clinics));
+          localStorage.setItem('tempUser', JSON.stringify({
+            fullName: data.fullName,
+            email: data.email,
+            role: data.role,
+          }));
+          
+          navigate('/select-clinic');
+        } else {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify({
+            fullName: data.fullName,
+            email: data.email,
+            role: data.role,
+          }));
+          
+          if (data.clinics && data.clinics.length === 1) {
+            localStorage.setItem('currentClinic', JSON.stringify(data.clinics[0]));
+          }
+          
+          message.success(t(`success.${response.code}`) || t('auth.loginSuccess'));
+          navigate('/');
+        }
       }
     } catch (error: any) {
       const errorCode = error.response?.data?.code || 'UNKNOWN_ERROR';
