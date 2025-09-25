@@ -48,6 +48,12 @@ public class ApplicationDbContext : DbContext
     
     // Notifications
     public DbSet<Notification> Notifications { get; set; }
+    
+    // Subscription Management
+    public DbSet<SubscriptionPackage> SubscriptionPackages { get; set; }
+    public DbSet<PackageLimit> PackageLimits { get; set; }
+    public DbSet<Subscription> Subscriptions { get; set; }
+    public DbSet<UsageTracking> UsageTrackings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -161,6 +167,32 @@ public class ApplicationDbContext : DbContext
             .HasOne(n => n.Appointment)
             .WithMany(a => a.Notifications)
             .HasForeignKey(n => n.AppointmentId);
+
+        // Configure Subscription relationships
+        modelBuilder.Entity<Clinic>()
+            .HasOne(c => c.Owner)
+            .WithMany()
+            .HasForeignKey(c => c.OwnerId);
+
+        modelBuilder.Entity<PackageLimit>()
+            .HasOne(pl => pl.SubscriptionPackage)
+            .WithMany(sp => sp.PackageLimits)
+            .HasForeignKey(pl => pl.SubscriptionPackageId);
+
+        modelBuilder.Entity<Subscription>()
+            .HasOne(s => s.User)
+            .WithMany()
+            .HasForeignKey(s => s.UserId);
+
+        modelBuilder.Entity<Subscription>()
+            .HasOne(s => s.SubscriptionPackage)
+            .WithMany(sp => sp.Subscriptions)
+            .HasForeignKey(s => s.SubscriptionPackageId);
+
+        modelBuilder.Entity<UsageTracking>()
+            .HasOne(ut => ut.Subscription)
+            .WithMany(s => s.UsageTrackings)
+            .HasForeignKey(ut => ut.SubscriptionId);
 
         // Configure indexes for clinic entities
         modelBuilder.Entity<Patient>().HasIndex(e => e.ClinicId);

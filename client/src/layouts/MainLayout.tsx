@@ -14,6 +14,7 @@ import {
   HomeOutlined,
   BellOutlined,
   FileDoneOutlined,
+  CrownOutlined,
 } from '@ant-design/icons';
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -161,6 +162,15 @@ const MainLayout = () => {
         key: '/staff',
         icon: <TeamOutlined />,
         label: t('menu.staff'),
+      });
+    }
+
+    // Subscription Management - Available for SuperAdmin and ClinicManager
+    if (canManageStaff) {
+      items.push({
+        key: '/subscription',
+        icon: <CrownOutlined />,
+        label: t('menu.subscription'),
       });
     }
 

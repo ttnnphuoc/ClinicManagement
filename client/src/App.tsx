@@ -10,6 +10,7 @@ import Appointments from './pages/Appointments';
 import Services from './pages/Services';
 import Clinics from './pages/Clinics';
 import Staff from './pages/Staff';
+import Subscription from './pages/Subscription';
 import ProtectedRoute from './components/ProtectedRoute';
 import './i18n/config';
 
@@ -38,6 +39,7 @@ function App() {
               <Route path="transactions" element={<div>Transactions Page</div>} />
               <Route path="inventory" element={<div>Inventory Page</div>} />
               <Route path="staff" element={<Staff />} />
+              <Route path="subscription" element={<Subscription />} />
             </Route>
           </Routes>
         </BrowserRouter>

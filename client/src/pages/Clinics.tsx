@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Switch, App, Space, Popconfirm } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Table, Button, Modal, Form, Input, Switch, App, Space, Popconfirm, Dropdown } from 'antd';
+import type { MenuProps } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined, DownOutlined, CrownOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { clinicService, type Clinic, type CreateClinicRequest } from '../services/clinicService';
+import CreateClinicWithPackage from '../components/CreateClinicWithPackage';
 
 const Clinics = () => {
   const { t } = useTranslation();
@@ -10,6 +12,7 @@ const Clinics = () => {
   const [clinics, setClinics] = useState<Clinic[]>([]);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPackageModalOpen, setIsPackageModalOpen] = useState(false);
   const [editingClinic, setEditingClinic] = useState<Clinic | null>(null);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -150,9 +153,29 @@ const Clinics = () => {
           style={{ width: 300 }}
           allowClear
         />
-        <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-          {t('clinics.addClinic')}
-        </Button>
+        <Dropdown
+          menu={{
+            items: [
+              {
+                key: 'regular',
+                label: 'Create Regular Clinic',
+                icon: <PlusOutlined />,
+                onClick: handleAdd,
+              },
+              {
+                key: 'with-package',
+                label: 'Create Clinic with Subscription',
+                icon: <CrownOutlined />,
+                onClick: () => setIsPackageModalOpen(true),
+              },
+            ] as MenuProps['items'],
+          }}
+          trigger={['click']}
+        >
+          <Button type="primary">
+            Create Clinic <DownOutlined />
+          </Button>
+        </Dropdown>
       </div>
 
       <Table
@@ -236,6 +259,15 @@ const Clinics = () => {
           </Form.Item>
         </Form>
       </Modal>
+
+      <CreateClinicWithPackage
+        open={isPackageModalOpen}
+        onCancel={() => setIsPackageModalOpen(false)}
+        onSuccess={() => {
+          setIsPackageModalOpen(false);
+          fetchClinics();
+        }}
+      />
     </div>
   );
 };

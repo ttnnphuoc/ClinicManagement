@@ -6,10 +6,12 @@ namespace ClinicManagement.Infrastructure.Services;
 public class ClinicService : IClinicService
 {
     private readonly IClinicRepository _clinicRepository;
+    private readonly ISubscriptionService _subscriptionService;
 
-    public ClinicService(IClinicRepository clinicRepository)
+    public ClinicService(IClinicRepository clinicRepository, ISubscriptionService subscriptionService)
     {
         _clinicRepository = clinicRepository;
+        _subscriptionService = subscriptionService;
     }
 
     public async Task<(bool Success, string? ErrorCode, Clinic? Clinic)> CreateClinicAsync(
@@ -30,6 +32,49 @@ public class ClinicService : IClinicService
 
         await _clinicRepository.AddAsync(clinic);
         await _clinicRepository.SaveChangesAsync();
+
+        return (true, null, clinic);
+    }
+
+    public async Task<(bool Success, string? ErrorCode, Clinic? Clinic)> CreateClinicWithPackageAsync(
+        string name,
+        string address,
+        string phoneNumber,
+        string? email,
+        bool isActive,
+        Guid ownerId,
+        Guid packageId)
+    {
+        var canCreateClinic = await _subscriptionService.ValidateUsageLimitAsync(ownerId, "Clinics");
+        if (!canCreateClinic)
+        {
+            return (false, "CLINIC_LIMIT_EXCEEDED", null);
+        }
+
+        var activeSubscription = await _subscriptionService.GetActiveSubscriptionAsync(ownerId);
+        if (activeSubscription == null)
+        {
+            var (subscriptionSuccess, subscriptionError, subscription) = await _subscriptionService.CreateSubscriptionAsync(ownerId, packageId);
+            if (!subscriptionSuccess)
+            {
+                return (false, subscriptionError, null);
+            }
+        }
+
+        var clinic = new Clinic
+        {
+            Name = name,
+            Address = address,
+            PhoneNumber = phoneNumber,
+            Email = email,
+            IsActive = isActive,
+            OwnerId = ownerId
+        };
+
+        await _clinicRepository.AddAsync(clinic);
+        await _clinicRepository.SaveChangesAsync();
+
+        await _subscriptionService.UpdateUsageAsync(ownerId, "Clinics", 1);
 
         return (true, null, clinic);
     }

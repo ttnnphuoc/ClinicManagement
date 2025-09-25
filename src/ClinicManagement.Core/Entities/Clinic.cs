@@ -7,7 +7,9 @@ public class Clinic : BaseEntity
     public string PhoneNumber { get; set; } = string.Empty;
     public string? Email { get; set; }
     public bool IsActive { get; set; } = true;
+    public Guid? OwnerId { get; set; }
 
+    public Staff? Owner { get; set; }
     public ICollection<StaffClinic> StaffClinics { get; set; } = new List<StaffClinic>();
     public ICollection<Patient> Patients { get; set; } = new List<Patient>();
     public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();

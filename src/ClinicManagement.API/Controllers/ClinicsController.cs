@@ -106,6 +106,38 @@ public class ClinicsController : ControllerBase
         return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success, MapToResponse(clinic!)));
     }
 
+    [HttpPost("with-package")]
+    public async Task<IActionResult> CreateClinicWithPackage([FromBody] CreateClinicWithPackageRequest request)
+    {
+        if (!_clinicContext.CurrentUserId.HasValue)
+        {
+            return BadRequest(ApiResponse.ErrorResponse(ResponseCodes.Auth.Unauthorized));
+        }
+
+        var (success, errorCode, clinic) = await _clinicService.CreateClinicWithPackageAsync(
+            request.Name,
+            request.Address,
+            request.PhoneNumber,
+            request.Email,
+            request.IsActive,
+            _clinicContext.CurrentUserId.Value,
+            request.PackageId);
+
+        if (!success)
+        {
+            var responseCode = errorCode switch
+            {
+                "CLINIC_LIMIT_EXCEEDED" => ResponseCodes.Subscription.LimitExceeded,
+                "SUBSCRIPTION_EXISTS" => ResponseCodes.Subscription.SubscriptionExists,
+                "PACKAGE_NOT_FOUND" => ResponseCodes.Subscription.PackageNotFound,
+                _ => ResponseCodes.Common.BadRequest
+            };
+            return BadRequest(ApiResponse.ErrorResponse(responseCode));
+        }
+
+        return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success, MapToResponse(clinic!)));
+    }
+
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateClinic(Guid id, [FromBody] UpdateClinicRequest request)
     {

@@ -26,4 +26,15 @@ public static class ResponseCodes
     {
         public const string TimeSlotNotAvailable = "APPOINTMENT_TIME_SLOT_NOT_AVAILABLE";
     }
+
+    public static class Subscription
+    {
+        public const string NoActiveSubscription = "SUBSCRIPTION_NO_ACTIVE";
+        public const string SubscriptionExpired = "SUBSCRIPTION_EXPIRED";
+        public const string LimitExceeded = "SUBSCRIPTION_LIMIT_EXCEEDED";
+        public const string PackageNotFound = "SUBSCRIPTION_PACKAGE_NOT_FOUND";
+        public const string SubscriptionExists = "SUBSCRIPTION_ALREADY_EXISTS";
+        public const string InvalidUpgrade = "SUBSCRIPTION_INVALID_UPGRADE";
+        public const string RenewalNotAllowed = "SUBSCRIPTION_RENEWAL_NOT_ALLOWED";
+    }
 }

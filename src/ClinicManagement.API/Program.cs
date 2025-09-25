@@ -103,6 +103,10 @@ builder.Services.AddScoped<IReceiptService, ReceiptService>();
 builder.Services.AddScoped<IQueueService, QueueService>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+builder.Services.AddScoped<ISubscriptionPackageRepository, SubscriptionPackageRepository>();
+builder.Services.AddScoped<IUsageTrackingRepository, UsageTrackingRepository>();
+builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -138,6 +142,7 @@ app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseMiddleware<ClinicMiddleware>();
+app.UseMiddleware<SubscriptionValidationMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
 

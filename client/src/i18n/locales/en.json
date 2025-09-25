@@ -31,7 +31,8 @@
     "inventory": "Inventory",
     "notifications": "Notifications",
     "clinics": "Clinics",
-    "staff": "Staff"
+    "staff": "Staff",
+    "subscription": "Subscription"
   },
   "dashboard": {
     "title": "Dashboard",

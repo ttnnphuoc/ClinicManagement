@@ -6,6 +6,7 @@ import {
   MedicineBoxOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
+import UsageDashboard from '../components/UsageDashboard';
 
 const Dashboard = () => {
   const { t } = useTranslation();
@@ -55,6 +56,10 @@ const Dashboard = () => {
           </Card>
         </Col>
       </Row>
+      
+      <div style={{ marginTop: '24px' }}>
+        <UsageDashboard />
+      </div>
     </div>
   );
 };

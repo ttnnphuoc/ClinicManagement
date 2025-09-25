@@ -58,5 +58,80 @@ public static class DbSeeder
             context.StaffClinics.Add(staffClinic);
             await context.SaveChangesAsync();
         }
+
+        // Seed subscription packages if none exist
+        if (!context.SubscriptionPackages.Any())
+        {
+            var packages = new List<SubscriptionPackage>
+            {
+                new SubscriptionPackage
+                {
+                    Name = "Trial",
+                    Description = "14-day free trial with basic features",
+                    Price = 0,
+                    DurationInDays = 14,
+                    IsActive = true,
+                    IsTrialPackage = true,
+                    PackageLimits = new List<PackageLimit>
+                    {
+                        new PackageLimit { LimitType = "Clinics", LimitValue = 1, IsActive = true },
+                        new PackageLimit { LimitType = "Patients", LimitValue = 50, IsActive = true },
+                        new PackageLimit { LimitType = "Staff", LimitValue = 2, IsActive = true },
+                        new PackageLimit { LimitType = "Appointments", LimitValue = 100, IsActive = true }
+                    }
+                },
+                new SubscriptionPackage
+                {
+                    Name = "Basic",
+                    Description = "Perfect for small clinics",
+                    Price = 29.99m,
+                    DurationInDays = 30,
+                    IsActive = true,
+                    IsTrialPackage = false,
+                    PackageLimits = new List<PackageLimit>
+                    {
+                        new PackageLimit { LimitType = "Clinics", LimitValue = 1, IsActive = true },
+                        new PackageLimit { LimitType = "Patients", LimitValue = 200, IsActive = true },
+                        new PackageLimit { LimitType = "Staff", LimitValue = 5, IsActive = true },
+                        new PackageLimit { LimitType = "Appointments", LimitValue = -1, IsActive = true }
+                    }
+                },
+                new SubscriptionPackage
+                {
+                    Name = "Professional",
+                    Description = "Advanced features for growing practices",
+                    Price = 79.99m,
+                    DurationInDays = 30,
+                    IsActive = true,
+                    IsTrialPackage = false,
+                    PackageLimits = new List<PackageLimit>
+                    {
+                        new PackageLimit { LimitType = "Clinics", LimitValue = 3, IsActive = true },
+                        new PackageLimit { LimitType = "Patients", LimitValue = 1000, IsActive = true },
+                        new PackageLimit { LimitType = "Staff", LimitValue = 10, IsActive = true },
+                        new PackageLimit { LimitType = "Appointments", LimitValue = -1, IsActive = true }
+                    }
+                },
+                new SubscriptionPackage
+                {
+                    Name = "Premium",
+                    Description = "Unlimited features for large organizations",
+                    Price = 149.99m,
+                    DurationInDays = 30,
+                    IsActive = true,
+                    IsTrialPackage = false,
+                    PackageLimits = new List<PackageLimit>
+                    {
+                        new PackageLimit { LimitType = "Clinics", LimitValue = -1, IsActive = true },
+                        new PackageLimit { LimitType = "Patients", LimitValue = -1, IsActive = true },
+                        new PackageLimit { LimitType = "Staff", LimitValue = -1, IsActive = true },
+                        new PackageLimit { LimitType = "Appointments", LimitValue = -1, IsActive = true }
+                    }
+                }
+            };
+
+            context.SubscriptionPackages.AddRange(packages);
+            await context.SaveChangesAsync();
+        }
     }
 }

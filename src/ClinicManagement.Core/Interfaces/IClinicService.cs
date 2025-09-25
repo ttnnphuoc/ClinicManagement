@@ -11,6 +11,15 @@ public interface IClinicService
         string? email,
         bool isActive);
 
+    Task<(bool Success, string? ErrorCode, Clinic? Clinic)> CreateClinicWithPackageAsync(
+        string name,
+        string address,
+        string phoneNumber,
+        string? email,
+        bool isActive,
+        Guid ownerId,
+        Guid packageId);
+
     Task<(bool Success, string? ErrorCode, Clinic? Clinic)> UpdateClinicAsync(
         Guid id,
         string name,
