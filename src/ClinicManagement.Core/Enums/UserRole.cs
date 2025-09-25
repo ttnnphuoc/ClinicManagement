@@ -2,11 +2,11 @@ namespace ClinicManagement.Core.Enums;
 
 public enum UserRole
 {
-    SuperAdmin = 1,
-    ClinicManager = 2,
-    Doctor = 3,
-    Nurse = 4,
-    Receptionist = 5,
-    Accountant = 6,
-    Pharmacist = 7
+    SuperAdmin = 0,    // Changed to 0 to match database
+    ClinicManager = 1,
+    Doctor = 2,
+    Nurse = 3,
+    Receptionist = 4,
+    Accountant = 5,
+    Pharmacist = 6
 }

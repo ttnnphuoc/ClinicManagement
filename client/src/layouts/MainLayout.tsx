@@ -19,6 +19,7 @@ import {
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '../components/LanguageSwitcher';
+import { getUserRole } from '../utils/roleUtils';
 
 const { Header, Sider, Content } = Layout;
 
@@ -29,12 +30,34 @@ const MainLayout = () => {
   const { t } = useTranslation();
 
   const user = JSON.parse(localStorage.getItem('user') || '{}');
-  const isSuperAdmin = user.role === 'SuperAdmin';
-  const canManageStaff = user.role === 'SuperAdmin' || user.role === 'ClinicManager';
-  const canManageFinance = ['SuperAdmin', 'ClinicManager', 'Accountant'].includes(user.role);
-  const canManageInventory = ['SuperAdmin', 'ClinicManager', 'Pharmacist'].includes(user.role);
-  const canManageAppointments = ['SuperAdmin', 'ClinicManager', 'Doctor', 'Nurse', 'Receptionist'].includes(user.role);
-  const canViewPatientRecords = ['SuperAdmin', 'ClinicManager', 'Doctor', 'Nurse'].includes(user.role);
+  
+  // If no user data, redirect to login
+  if (!user || !user.role) {
+    console.warn('No user data found, redirecting to login');
+    localStorage.clear();
+    navigate('/login');
+    return <div>Loading...</div>;
+  }
+  
+  const userRole = getUserRole(user.role);
+  console.log('User role:', userRole); // Keep this for debugging
+  
+  const isSuperAdmin = userRole === 'SuperAdmin';
+  const canManageStaff = userRole === 'SuperAdmin' || userRole === 'ClinicManager';
+  const canManageFinance = ['SuperAdmin', 'ClinicManager', 'Accountant'].includes(userRole);
+  const canManageInventory = ['SuperAdmin', 'ClinicManager', 'Pharmacist'].includes(userRole);
+  const canManageAppointments = ['SuperAdmin', 'ClinicManager', 'Doctor', 'Nurse', 'Receptionist'].includes(userRole);
+  const canViewPatientRecords = ['SuperAdmin', 'ClinicManager', 'Doctor', 'Nurse'].includes(userRole);
+
+  // Debug permissions
+  console.log('Permissions:', {
+    userRole,
+    isSuperAdmin,
+    canManageStaff,
+    canManageAppointments,
+    canViewPatientRecords,
+    canManageFinance
+  });
 
   const handleLogout = () => {
     localStorage.removeItem('token');
