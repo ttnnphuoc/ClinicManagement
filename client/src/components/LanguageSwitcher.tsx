@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import type { MenuProps } from 'antd';
 
 const LanguageSwitcher = () => {
-  const { i18n, t } = useTranslation();
+  const { i18n } = useTranslation();
 
   const items: MenuProps['items'] = [
     {

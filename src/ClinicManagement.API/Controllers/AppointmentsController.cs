@@ -89,6 +89,21 @@ public class AppointmentsController : ControllerBase
         return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success, MapToResponse(appointment!)));
     }
 
+    [HttpPatch("{id}/status")]
+    public async Task<IActionResult> UpdateAppointmentStatus(Guid id, [FromBody] UpdateAppointmentStatusRequest request)
+    {
+        var (success, errorCode, appointment) = await _appointmentService.UpdateAppointmentStatusAsync(id, request.Status);
+
+        if (!success)
+        {
+            return errorCode == "NOT_FOUND"
+                ? NotFound(ApiResponse.ErrorResponse(ResponseCodes.Common.NotFound))
+                : BadRequest(ApiResponse.ErrorResponse(ResponseCodes.Common.BadRequest));
+        }
+
+        return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success, MapToResponse(appointment!)));
+    }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAppointment(Guid id)
     {

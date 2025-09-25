@@ -20,10 +20,17 @@
     "dashboard": "Trang chủ",
     "patients": "Bệnh nhân",
     "appointments": "Lịch hẹn",
+    "queue": "Hàng đợi",
+    "rooms": "Phòng khám",
     "services": "Dịch vụ",
-    "clinics": "Phòng khám",
+    "medicines": "Thuốc",
+    "prescriptions": "Đơn thuốc",
+    "bills": "Thanh toán",
+    "receipts": "Hóa đơn",
     "transactions": "Thu chi",
     "inventory": "Kho",
+    "notifications": "Thông báo",
+    "clinics": "Phòng khám",
     "staff": "Nhân viên"
   },
   "dashboard": {

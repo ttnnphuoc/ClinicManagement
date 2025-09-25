@@ -43,7 +43,13 @@ const Services = () => {
 
   const fetchClinics = async () => {
     try {
-      const response = await clinicService.getActiveClinics();
+      let response;
+      if (isSuperAdmin) {
+        response = await clinicService.getActiveClinics();
+      } else {
+        response = await clinicService.getMyClinics();
+      }
+      
       if (response.success && response.data) {
         setClinics(response.data);
       }
@@ -57,7 +63,7 @@ const Services = () => {
   }, [page, searchText]);
 
   useEffect(() => {
-    if (isSuperAdmin) {
+    if (isSuperAdmin || isClinicManager) {
       fetchClinics();
     }
   }, []);
@@ -65,8 +71,12 @@ const Services = () => {
   const handleAdd = () => {
     setEditingService(null);
     form.resetFields();
-    if (isClinicManager && currentClinic) {
-      form.setFieldsValue({ clinicId: currentClinic.id });
+    if (isClinicManager) {
+      if (clinics.length === 1) {
+        form.setFieldsValue({ clinicId: clinics[0].id });
+      } else if (currentClinic) {
+        form.setFieldsValue({ clinicId: currentClinic.id });
+      }
     }
     setIsModalOpen(true);
   };
@@ -271,12 +281,23 @@ const Services = () => {
             </Form.Item>
           )}
 
-          {isClinicManager && currentClinic && (
+          {isClinicManager && (
             <Form.Item
               name="clinicId"
               label={t('services.clinic')}
+              rules={[{ required: true, message: t('services.clinicRequired') }]}
             >
-              <Input value={currentClinic.name} disabled />
+              {clinics.length > 1 ? (
+                <Select placeholder={t('services.selectClinic')}>
+                  {clinics.map(clinic => (
+                    <Option key={clinic.id} value={clinic.id}>
+                      {clinic.name}
+                    </Option>
+                  ))}
+                </Select>
+              ) : (
+                <Input value={currentClinic?.name || clinics[0]?.name} disabled />
+              )}
             </Form.Item>
           )}
 

@@ -92,6 +92,23 @@ public class AppointmentService : IAppointmentService
         return (true, null);
     }
 
+    public async Task<(bool Success, string? ErrorCode, Appointment? Appointment)> UpdateAppointmentStatusAsync(Guid id, string status)
+    {
+        var appointment = await _appointmentRepository.GetByIdAsync(id);
+        if (appointment == null)
+        {
+            return (false, "NOT_FOUND", null);
+        }
+
+        appointment.Status = status;
+
+        await _appointmentRepository.UpdateAsync(appointment);
+        await _appointmentRepository.SaveChangesAsync();
+
+        var updated = await _appointmentRepository.GetByIdWithDetailsAsync(id);
+        return (true, null, updated);
+    }
+
     public async Task<Appointment?> GetAppointmentByIdAsync(Guid id)
     {
         return await _appointmentRepository.GetByIdWithDetailsAsync(id);

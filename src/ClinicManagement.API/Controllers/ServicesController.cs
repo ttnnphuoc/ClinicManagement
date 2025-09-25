@@ -14,11 +14,13 @@ public class ServicesController : ControllerBase
 {
     private readonly IMedicalServiceService _medicalServiceService;
     private readonly IClinicContext _clinicContext;
+    private readonly IStaffRepository _staffRepository;
 
-    public ServicesController(IMedicalServiceService medicalServiceService, IClinicContext clinicContext)
+    public ServicesController(IMedicalServiceService medicalServiceService, IClinicContext clinicContext, IStaffRepository staffRepository)
     {
         _medicalServiceService = medicalServiceService;
         _clinicContext = clinicContext;
+        _staffRepository = staffRepository;
     }
 
     [HttpGet]
@@ -64,6 +66,18 @@ public class ServicesController : ControllerBase
     {
         var clinicId = request.ClinicId ?? _clinicContext.CurrentClinicId;
         
+        // Validate user has access to the clinic (unless SuperAdmin)
+        if (_clinicContext.CurrentUserRole != "SuperAdmin" && 
+            _clinicContext.CurrentUserId.HasValue && 
+            clinicId.HasValue)
+        {
+            var hasAccess = await _staffRepository.HasAccessToClinicAsync(_clinicContext.CurrentUserId.Value, clinicId.Value);
+            if (!hasAccess)
+            {
+                return BadRequest(ApiResponse.ErrorResponse(ResponseCodes.Auth.Unauthorized));
+            }
+        }
+        
         var (success, errorCode, service) = await _medicalServiceService.CreateServiceAsync(
             clinicId,
             request.Name,
@@ -85,6 +99,24 @@ public class ServicesController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateService(Guid id, [FromBody] UpdateServiceRequest request)
     {
+        // Check if service exists and user has access to its clinic
+        var existingService = await _medicalServiceService.GetServiceByIdAsync(id);
+        if (existingService == null)
+        {
+            return NotFound(ApiResponse.ErrorResponse(ResponseCodes.Common.NotFound));
+        }
+
+        // Validate user has access to the service's clinic (unless SuperAdmin)
+        if (_clinicContext.CurrentUserRole != "SuperAdmin" && 
+            _clinicContext.CurrentUserId.HasValue)
+        {
+            var hasAccess = await _staffRepository.HasAccessToClinicAsync(_clinicContext.CurrentUserId.Value, existingService.ClinicId);
+            if (!hasAccess)
+            {
+                return BadRequest(ApiResponse.ErrorResponse(ResponseCodes.Auth.Unauthorized));
+            }
+        }
+
         var (success, errorCode, service) = await _medicalServiceService.UpdateServiceAsync(
             id,
             request.Name,
@@ -104,6 +136,24 @@ public class ServicesController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteService(Guid id)
     {
+        // Check if service exists and user has access to its clinic
+        var existingService = await _medicalServiceService.GetServiceByIdAsync(id);
+        if (existingService == null)
+        {
+            return NotFound(ApiResponse.ErrorResponse(ResponseCodes.Common.NotFound));
+        }
+
+        // Validate user has access to the service's clinic (unless SuperAdmin)
+        if (_clinicContext.CurrentUserRole != "SuperAdmin" && 
+            _clinicContext.CurrentUserId.HasValue)
+        {
+            var hasAccess = await _staffRepository.HasAccessToClinicAsync(_clinicContext.CurrentUserId.Value, existingService.ClinicId);
+            if (!hasAccess)
+            {
+                return BadRequest(ApiResponse.ErrorResponse(ResponseCodes.Auth.Unauthorized));
+            }
+        }
+
         var (success, errorCode) = await _medicalServiceService.DeleteServiceAsync(id);
 
         if (!success)

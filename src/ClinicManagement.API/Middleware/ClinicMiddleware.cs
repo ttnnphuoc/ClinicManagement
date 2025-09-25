@@ -17,12 +17,23 @@ public class ClinicMiddleware
         var clinicIdClaim = context.User.FindFirst("ClinicId")?.Value;
         var userIdClaim = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? 
                           context.User.FindFirst("sub")?.Value;
+        var roleClaim = context.User.FindFirst(ClaimTypes.Role)?.Value;
+
+        if (!string.IsNullOrEmpty(userIdClaim) && Guid.TryParse(userIdClaim, out var userId))
+        {
+            clinicContext.SetUserId(userId);
+        }
+
+        if (!string.IsNullOrEmpty(roleClaim))
+        {
+            clinicContext.SetUserRole(roleClaim);
+        }
 
         if (!string.IsNullOrEmpty(clinicIdClaim) && Guid.TryParse(clinicIdClaim, out var clinicId))
         {
-            if (!string.IsNullOrEmpty(userIdClaim) && Guid.TryParse(userIdClaim, out var userId))
+            if (!string.IsNullOrEmpty(userIdClaim) && Guid.TryParse(userIdClaim, out var userId2))
             {
-                var hasAccess = await staffRepository.HasAccessToClinicAsync(userId, clinicId);
+                var hasAccess = await staffRepository.HasAccessToClinicAsync(userId2, clinicId);
                 
                 if (!hasAccess)
                 {

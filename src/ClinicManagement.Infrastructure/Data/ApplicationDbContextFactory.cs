@@ -23,8 +23,20 @@ public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Applicati
 public class DesignTimeClinicContext : IClinicContext
 {
     public Guid? CurrentClinicId => null;
+    public Guid? CurrentUserId => null;
+    public string? CurrentUserRole => null;
     
     public void SetClinicId(Guid clinicId)
+    {
+        // No-op for design-time
+    }
+
+    public void SetUserId(Guid userId)
+    {
+        // No-op for design-time
+    }
+
+    public void SetUserRole(string role)
     {
         // No-op for design-time
     }

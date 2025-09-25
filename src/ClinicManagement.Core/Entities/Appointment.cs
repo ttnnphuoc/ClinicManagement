@@ -14,4 +14,9 @@ public class Appointment : BaseEntity, IClinicEntity
     public Patient Patient { get; set; } = null!;
     public Staff Staff { get; set; } = null!;
     public ICollection<AppointmentService> AppointmentServices { get; set; } = new List<AppointmentService>();
+    public TreatmentHistory? TreatmentHistory { get; set; }
+    public Bill? Bill { get; set; }
+    public RoomBooking? RoomBooking { get; set; }
+    public PatientQueue? PatientQueue { get; set; }
+    public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 }

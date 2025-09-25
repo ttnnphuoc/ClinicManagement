@@ -70,6 +70,9 @@ builder.Services.AddAuthorization(options =>
     
     options.AddPolicy(ClinicManagement.API.Constants.Policies.ManageStaff, policy => 
         policy.RequireRole("SuperAdmin", "ClinicManager"));
+        
+    options.AddPolicy(ClinicManagement.API.Constants.Policies.ManageBills, policy => 
+        policy.RequireRole("SuperAdmin", "ClinicManager", "Accountant", "Receptionist"));
 });
 
 builder.Services.AddScoped<IClinicContext, ClinicContext>();
@@ -79,12 +82,27 @@ builder.Services.AddScoped<IClinicRepository, ClinicRepository>();
 builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+builder.Services.AddScoped<ITreatmentHistoryRepository, TreatmentHistoryRepository>();
+builder.Services.AddScoped<IBillRepository, BillRepository>();
+builder.Services.AddScoped<IMedicineRepository, MedicineRepository>();
+builder.Services.AddScoped<IPrescriptionRepository, PrescriptionRepository>();
+builder.Services.AddScoped<IReceiptRepository, ReceiptRepository>();
+builder.Services.AddScoped<IQueueRepository, QueueRepository>();
+builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IStaffService, StaffService>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IClinicService, ClinicService>();
 builder.Services.AddScoped<IMedicalServiceService, MedicalServiceService>();
+builder.Services.AddScoped<ITreatmentHistoryService, TreatmentHistoryService>();
+builder.Services.AddScoped<IBillService, BillService>();
+builder.Services.AddScoped<IMedicineService, MedicineService>();
+builder.Services.AddScoped<IPrescriptionService, PrescriptionService>();
+builder.Services.AddScoped<IReceiptService, ReceiptService>();
+builder.Services.AddScoped<IQueueService, QueueService>();
+builder.Services.AddScoped<IInventoryService, InventoryService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

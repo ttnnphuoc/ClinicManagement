@@ -18,6 +18,11 @@ public record UpdateAppointmentRequest
     public string? Notes { get; init; }
 }
 
+public record UpdateAppointmentStatusRequest
+{
+    public string Status { get; init; } = string.Empty;
+}
+
 public record AppointmentResponse
 {
     public Guid Id { get; init; }

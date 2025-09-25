@@ -20,4 +20,5 @@ public static class Policies
     public const string ManageFinance = "ManageFinance"; // SuperAdmin + ClinicManager + Accountant
     public const string ManageInventory = "ManageInventory"; // SuperAdmin + ClinicManager + Pharmacist
     public const string ManageStaff = "ManageStaff"; // SuperAdmin + ClinicManager
+    public const string ManageBills = "ManageBills"; // SuperAdmin + ClinicManager + Accountant + Receptionist
 }

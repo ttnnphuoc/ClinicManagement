@@ -61,4 +61,9 @@ export const clinicService = {
     const response = await api.delete<ApiResponse<void>>(`/clinics/${id}`);
     return response.data;
   },
+
+  getMyClinics: async (): Promise<ApiResponse<Clinic[]>> => {
+    const response = await api.get<ApiResponse<Clinic[]>>('/clinics/my-clinics');
+    return response.data;
+  },
 };

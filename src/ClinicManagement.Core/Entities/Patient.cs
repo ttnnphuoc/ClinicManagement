@@ -31,4 +31,8 @@ public class Patient : BaseEntity, IClinicEntity
 
     public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
     public ICollection<TreatmentHistory> TreatmentHistories { get; set; } = new List<TreatmentHistory>();
+    public ICollection<Bill> Bills { get; set; } = new List<Bill>();
+    public ICollection<Prescription> Prescriptions { get; set; } = new List<Prescription>();
+    public ICollection<PatientQueue> PatientQueues { get; set; } = new List<PatientQueue>();
+    public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 }

@@ -20,10 +20,17 @@
     "dashboard": "Dashboard",
     "patients": "Patients",
     "appointments": "Appointments",
+    "queue": "Patient Queue",
+    "rooms": "Rooms",
     "services": "Services",
-    "clinics": "Clinics",
+    "medicines": "Medicines",
+    "prescriptions": "Prescriptions",
+    "bills": "Billing",
+    "receipts": "Receipts",
     "transactions": "Revenue/Expense",
     "inventory": "Inventory",
+    "notifications": "Notifications",
+    "clinics": "Clinics",
     "staff": "Staff"
   },
   "dashboard": {

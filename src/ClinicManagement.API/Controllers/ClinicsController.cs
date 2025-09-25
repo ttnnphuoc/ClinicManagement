@@ -13,10 +13,14 @@ namespace ClinicManagement.API.Controllers;
 public class ClinicsController : ControllerBase
 {
     private readonly IClinicService _clinicService;
+    private readonly IStaffRepository _staffRepository;
+    private readonly IClinicContext _clinicContext;
 
-    public ClinicsController(IClinicService clinicService)
+    public ClinicsController(IClinicService clinicService, IStaffRepository staffRepository, IClinicContext clinicContext)
     {
         _clinicService = clinicService;
+        _staffRepository = staffRepository;
+        _clinicContext = clinicContext;
     }
 
     [HttpGet]
@@ -42,6 +46,33 @@ public class ClinicsController : ControllerBase
         var response = clinics.Select(c => MapToResponse(c));
 
         return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success, response));
+    }
+
+    [HttpGet("my-clinics")]
+    public async Task<IActionResult> GetMyClinics()
+    {
+        if (!_clinicContext.CurrentUserId.HasValue)
+        {
+            return BadRequest(ApiResponse.ErrorResponse(ResponseCodes.Auth.Unauthorized));
+        }
+
+        var staff = await _staffRepository.GetByIdWithClinicsAsync(_clinicContext.CurrentUserId.Value);
+        if (staff == null)
+        {
+            return NotFound(ApiResponse.ErrorResponse(ResponseCodes.Common.NotFound));
+        }
+
+        var myClinics = staff.StaffClinics
+            .Where(sc => sc.IsActive)
+            .Select(sc => new
+            {
+                id = sc.Clinic.Id.ToString(),
+                name = sc.Clinic.Name,
+                address = sc.Clinic.Address,
+                isActive = sc.Clinic.IsActive
+            });
+
+        return Ok(ApiResponse.SuccessResponse(ResponseCodes.Common.Success, myClinics));
     }
 
     [HttpGet("{id}")]

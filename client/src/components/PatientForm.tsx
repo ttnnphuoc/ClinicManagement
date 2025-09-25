@@ -7,7 +7,7 @@ import type { Patient, CreatePatientRequest } from '../services/patientService';
 
 interface PatientFormProps {
   patient: Patient | null;
-  onSuccess: () => void;
+  onSuccess: (patient?: Patient) => void;
   onCancel: () => void;
 }
 
@@ -54,13 +54,13 @@ const PatientForm = ({ patient, onSuccess, onCancel }: PatientFormProps) => {
         const response = await patientService.updatePatient(patient.id, data);
         if (response.success) {
           message.success(t('patients.updateSuccess'));
-          onSuccess();
+          onSuccess(response.data);
         }
       } else {
         const response = await patientService.createPatient(data);
         if (response.success) {
           message.success(t('patients.createSuccess'));
-          onSuccess();
+          onSuccess(response.data);
         }
       }
     } catch (error: any) {

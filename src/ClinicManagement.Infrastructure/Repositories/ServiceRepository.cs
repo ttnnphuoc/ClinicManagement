@@ -13,8 +13,16 @@ public class ServiceRepository : Repository<Service>, IServiceRepository
 
     public async Task<IEnumerable<Service>> GetActiveServicesAsync()
     {
-        return await _context.Set<Service>()
-            .Where(s => s.IsActive && !s.IsDeleted)
+        var query = _context.Set<Service>()
+            .Where(s => s.IsActive && !s.IsDeleted);
+            
+        // Filter by clinic if user is not SuperAdmin
+        if (_clinicContext.CurrentClinicId.HasValue)
+        {
+            query = query.Where(s => s.ClinicId == _clinicContext.CurrentClinicId.Value);
+        }
+            
+        return await query
             .OrderBy(s => s.Name)
             .ToListAsync();
     }
@@ -22,6 +30,12 @@ public class ServiceRepository : Repository<Service>, IServiceRepository
     public async Task<int> GetTotalCountAsync(string? search = null)
     {
         var query = _context.Set<Service>().Where(s => !s.IsDeleted);
+
+        // Filter by clinic if user is not SuperAdmin
+        if (_clinicContext.CurrentClinicId.HasValue)
+        {
+            query = query.Where(s => s.ClinicId == _clinicContext.CurrentClinicId.Value);
+        }
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -34,6 +48,12 @@ public class ServiceRepository : Repository<Service>, IServiceRepository
     public async Task<IEnumerable<Service>> SearchServicesAsync(string? search, int page, int pageSize)
     {
         var query = _context.Set<Service>().Where(s => !s.IsDeleted);
+
+        // Filter by clinic if user is not SuperAdmin  
+        if (_clinicContext.CurrentClinicId.HasValue)
+        {
+            query = query.Where(s => s.ClinicId == _clinicContext.CurrentClinicId.Value);
+        }
 
         if (!string.IsNullOrWhiteSpace(search))
         {
