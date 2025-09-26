@@ -31,11 +31,11 @@ const CreateClinicWithPackage: React.FC<CreateClinicWithPackageProps> = ({
           setCurrentStep(1);
         })
         .catch(() => {
-          message.error('Please fill in all required fields');
+          message.error(t('clinics.fillAllRequiredFields'));
         });
     } else if (currentStep === 1) {
       if (!selectedPackage) {
-        message.error('Please select a subscription package');
+        message.error(t('clinics.selectSubscriptionPackage'));
         return;
       }
       setCurrentStep(2);
@@ -50,7 +50,7 @@ const CreateClinicWithPackage: React.FC<CreateClinicWithPackageProps> = ({
     try {
       const values = await form.validateFields();
       if (!selectedPackage) {
-        message.error('Please select a subscription package');
+        message.error(t('clinics.selectSubscriptionPackage'));
         return;
       }
 
@@ -62,11 +62,11 @@ const CreateClinicWithPackage: React.FC<CreateClinicWithPackageProps> = ({
 
       const response = await subscriptionService.createClinicWithPackage(requestData);
       if (response.success) {
-        message.success('Clinic created successfully with subscription!');
+        message.success(t('clinics.clinicCreatedWithSubscription'));
         handleClose();
         onSuccess();
       } else {
-        message.error('Failed to create clinic with subscription');
+        message.error(t('clinics.failedToCreateClinicWithSubscription'));
       }
     } catch (error: any) {
       const errorCode = error.response?.data?.code || 'UNKNOWN_ERROR';
@@ -97,7 +97,7 @@ const CreateClinicWithPackage: React.FC<CreateClinicWithPackageProps> = ({
               label={t('clinics.name')}
               rules={[{ required: true, message: t('clinics.nameRequired') }]}
             >
-              <Input placeholder="Enter clinic name" />
+              <Input placeholder={t('clinics.enterClinicName')} />
             </Form.Item>
 
             <Form.Item
@@ -105,7 +105,7 @@ const CreateClinicWithPackage: React.FC<CreateClinicWithPackageProps> = ({
               label={t('clinics.address')}
               rules={[{ required: true, message: t('clinics.addressRequired') }]}
             >
-              <Input.TextArea rows={3} placeholder="Enter clinic address" />
+              <Input.TextArea rows={3} placeholder={t('clinics.enterClinicAddress')} />
             </Form.Item>
 
             <Form.Item
@@ -113,7 +113,7 @@ const CreateClinicWithPackage: React.FC<CreateClinicWithPackageProps> = ({
               label={t('clinics.phoneNumber')}
               rules={[{ required: true, message: t('clinics.phoneRequired') }]}
             >
-              <Input placeholder="Enter phone number" />
+              <Input placeholder={t('clinics.enterPhoneNumber')} />
             </Form.Item>
 
             <Form.Item
@@ -121,7 +121,7 @@ const CreateClinicWithPackage: React.FC<CreateClinicWithPackageProps> = ({
               label={t('clinics.email')}
               rules={[{ type: 'email', message: t('patients.emailInvalid') }]}
             >
-              <Input placeholder="Enter email address (optional)" />
+              <Input placeholder={t('clinics.enterEmailOptional')} />
             </Form.Item>
 
             <Form.Item name="isActive" label={t('clinics.status')} valuePropName="checked">
@@ -133,7 +133,7 @@ const CreateClinicWithPackage: React.FC<CreateClinicWithPackageProps> = ({
         return (
           <div>
             <h3 style={{ marginBottom: '20px', textAlign: 'center' }}>
-              Choose Your Subscription Package
+              {t('clinics.chooseYourSubscriptionPackage')}
             </h3>
             <PackageSelection
               onPackageSelect={setSelectedPackage}
@@ -145,18 +145,18 @@ const CreateClinicWithPackage: React.FC<CreateClinicWithPackageProps> = ({
       case 2:
         return (
           <div style={{ textAlign: 'center', padding: '40px 0' }}>
-            <h3>Review Your Setup</h3>
+            <h3>{t('clinics.reviewYourSetup')}</h3>
             <div style={{ marginBottom: '24px', textAlign: 'left', maxWidth: '400px', margin: '0 auto' }}>
-              <p><strong>Clinic Name:</strong> {form.getFieldValue('name')}</p>
-              <p><strong>Address:</strong> {form.getFieldValue('address')}</p>
-              <p><strong>Phone:</strong> {form.getFieldValue('phoneNumber')}</p>
+              <p><strong>{t('clinics.clinicName')}:</strong> {form.getFieldValue('name')}</p>
+              <p><strong>{t('clinics.address')}:</strong> {form.getFieldValue('address')}</p>
+              <p><strong>{t('clinics.phoneNumber')}:</strong> {form.getFieldValue('phoneNumber')}</p>
               {form.getFieldValue('email') && (
-                <p><strong>Email:</strong> {form.getFieldValue('email')}</p>
+                <p><strong>{t('clinics.email')}:</strong> {form.getFieldValue('email')}</p>
               )}
-              <p><strong>Package:</strong> Selected package will be activated</p>
+              <p><strong>{t('clinics.packageLabel')}:</strong> {t('clinics.selectedPackageWillBeActivated')}</p>
             </div>
             <p style={{ color: '#666', fontSize: '14px' }}>
-              Click "Create Clinic" to complete the setup. Your subscription will be activated automatically.
+              {t('clinics.clickCreateClinicToComplete')}
             </p>
           </div>
         );
@@ -168,11 +168,11 @@ const CreateClinicWithPackage: React.FC<CreateClinicWithPackageProps> = ({
   const getStepTitle = (step: number) => {
     switch (step) {
       case 0:
-        return 'Clinic Information';
+        return t('clinics.clinicInformation');
       case 1:
-        return 'Choose Package';
+        return t('clinics.choosePackage');
       case 2:
-        return 'Review & Create';
+        return t('clinics.reviewAndCreate');
       default:
         return '';
     }
@@ -180,7 +180,7 @@ const CreateClinicWithPackage: React.FC<CreateClinicWithPackageProps> = ({
 
   return (
     <Modal
-      title="Create New Clinic with Subscription"
+      title={t('clinics.createNewClinicWithSubscription')}
       open={open}
       onCancel={handleClose}
       footer={null}
@@ -200,17 +200,17 @@ const CreateClinicWithPackage: React.FC<CreateClinicWithPackageProps> = ({
       <div style={{ marginTop: '24px', textAlign: 'right' }}>
         {currentStep > 0 && (
           <Button style={{ marginRight: '8px' }} onClick={handlePrev}>
-            Previous
+            {t('clinics.previous')}
           </Button>
         )}
         {currentStep < 2 && (
           <Button type="primary" onClick={handleNext}>
-            Next
+            {t('clinics.next')}
           </Button>
         )}
         {currentStep === 2 && (
           <Button type="primary" onClick={handleSubmit} loading={loading}>
-            Create Clinic
+            {t('clinics.createClinic')}
           </Button>
         )}
       </div>

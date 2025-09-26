@@ -158,13 +158,13 @@ const Clinics = () => {
             items: [
               {
                 key: 'regular',
-                label: 'Create Regular Clinic',
+                label: t('clinics.createRegularClinic'),
                 icon: <PlusOutlined />,
                 onClick: handleAdd,
               },
               {
                 key: 'with-package',
-                label: 'Create Clinic with Subscription',
+                label: t('clinics.createClinicWithSubscription'),
                 icon: <CrownOutlined />,
                 onClick: () => setIsPackageModalOpen(true),
               },
@@ -173,7 +173,7 @@ const Clinics = () => {
           trigger={['click']}
         >
           <Button type="primary">
-            Create Clinic <DownOutlined />
+            {t('clinics.createClinic')} <DownOutlined />
           </Button>
         </Dropdown>
       </div>

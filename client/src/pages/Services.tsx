@@ -296,7 +296,13 @@ const Services = () => {
                   ))}
                 </Select>
               ) : (
-                <Input value={currentClinic?.name || clinics[0]?.name} disabled />
+                <Select disabled>
+                  {clinics.map(clinic => (
+                    <Option key={clinic.id} value={clinic.id}>
+                      {clinic.name}
+                    </Option>
+                  ))}
+                </Select>
               )}
             </Form.Item>
           )}

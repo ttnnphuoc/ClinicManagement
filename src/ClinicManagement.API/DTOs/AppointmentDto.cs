@@ -1,12 +1,23 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace ClinicManagement.API.DTOs;
 
 public record CreateAppointmentRequest
 {
+    [Required]
     public Guid PatientId { get; init; }
-    public Guid StaffId { get; init; }
+    
+    public Guid? StaffId { get; init; }
+    
+    [Required]
     public DateTime AppointmentDate { get; init; }
+    
+    [Required]
     public string Status { get; init; } = "Scheduled";
+    
     public string? Notes { get; init; }
+    
+    public string[]? ServiceIds { get; init; }
 }
 
 public record UpdateAppointmentRequest

@@ -20,7 +20,10 @@ public class AppointmentService : IAppointmentService
         string status,
         string? notes)
     {
-        var isAvailable = await _appointmentRepository.IsTimeSlotAvailableAsync(staffId, appointmentDate);
+        var utcAppointmentDate = appointmentDate.Kind == DateTimeKind.Unspecified 
+            ? DateTime.SpecifyKind(appointmentDate, DateTimeKind.Utc)
+            : appointmentDate.ToUniversalTime();
+        var isAvailable = await _appointmentRepository.IsTimeSlotAvailableAsync(staffId, utcAppointmentDate);
         
         if (!isAvailable)
         {
@@ -32,7 +35,7 @@ public class AppointmentService : IAppointmentService
             ClinicId = clinicId,
             PatientId = patientId,
             StaffId = staffId,
-            AppointmentDate = appointmentDate,
+            AppointmentDate = utcAppointmentDate,
             Status = status,
             Notes = notes
         };
@@ -58,7 +61,10 @@ public class AppointmentService : IAppointmentService
             return (false, "NOT_FOUND", null);
         }
 
-        var isAvailable = await _appointmentRepository.IsTimeSlotAvailableAsync(staffId, appointmentDate, id);
+        var utcAppointmentDate = appointmentDate.Kind == DateTimeKind.Unspecified 
+            ? DateTime.SpecifyKind(appointmentDate, DateTimeKind.Utc)
+            : appointmentDate.ToUniversalTime();
+        var isAvailable = await _appointmentRepository.IsTimeSlotAvailableAsync(staffId, utcAppointmentDate, id);
         
         if (!isAvailable)
         {
@@ -67,7 +73,7 @@ public class AppointmentService : IAppointmentService
 
         appointment.PatientId = patientId;
         appointment.StaffId = staffId;
-        appointment.AppointmentDate = appointmentDate;
+        appointment.AppointmentDate = utcAppointmentDate;
         appointment.Status = status;
         appointment.Notes = notes;
 
@@ -116,8 +122,14 @@ public class AppointmentService : IAppointmentService
 
     public async Task<IEnumerable<Appointment>> GetAppointmentsByDateRangeAsync(DateTime? startDate, DateTime? endDate)
     {
-        var start = startDate ?? DateTime.UtcNow.Date;
-        var end = endDate ?? DateTime.UtcNow.Date.AddMonths(1);
+        // Convert to UTC to ensure PostgreSQL compatibility
+        var start = startDate?.Kind == DateTimeKind.Unspecified 
+            ? DateTime.SpecifyKind(startDate.Value, DateTimeKind.Utc) 
+            : startDate?.ToUniversalTime() ?? DateTime.UtcNow.Date;
+            
+        var end = endDate?.Kind == DateTimeKind.Unspecified 
+            ? DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc) 
+            : endDate?.ToUniversalTime() ?? DateTime.UtcNow.Date.AddMonths(1);
 
         return await _appointmentRepository.GetByDateRangeAsync(start, end);
     }

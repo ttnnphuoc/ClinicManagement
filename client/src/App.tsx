@@ -8,6 +8,7 @@ import ClinicSelection from './pages/ClinicSelection';
 import Patients from './pages/Patients';
 import Appointments from './pages/Appointments';
 import Services from './pages/Services';
+import Medicines from './pages/Medicines';
 import Clinics from './pages/Clinics';
 import Staff from './pages/Staff';
 import Subscription from './pages/Subscription';
@@ -35,6 +36,7 @@ function App() {
               <Route path="patients" element={<Patients />} />
               <Route path="appointments" element={<Appointments />} />
               <Route path="services" element={<Services />} />
+              <Route path="medicines" element={<Medicines />} />
               <Route path="clinics" element={<Clinics />} />
               <Route path="transactions" element={<div>Transactions Page</div>} />
               <Route path="inventory" element={<div>Inventory Page</div>} />

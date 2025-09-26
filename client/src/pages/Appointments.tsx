@@ -1,4 +1,4 @@
-import { Calendar, Badge, Modal, Form, Input, DatePicker, Select, Button, App, AutoComplete, Typography, Space, Table, Tabs, Tag } from 'antd';
+import { Calendar, Badge, Modal, Form, Input, DatePicker, Select, Button, App, AutoComplete, Typography, Space, Table, Tabs, Tag, Spin } from 'antd';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PlusOutlined, MedicineBoxOutlined } from '@ant-design/icons';
@@ -7,24 +7,26 @@ import dayjs from 'dayjs';
 import { serviceService, type Service } from '../services/serviceService';
 import { patientService, type Patient } from '../services/patientService';
 import { treatmentHistoryService, type TreatmentHistory } from '../services/treatmentHistoryService';
-import { appointmentService } from '../services/appointmentService';
+import { appointmentService, type Appointment as ApiAppointment } from '../services/appointmentService';
 import PatientForm from '../components/PatientForm';
 import TreatmentForm from '../components/TreatmentForm';
 
 const { Text } = Typography;
 
-interface Appointment {
-  id: string;
-  title: string;
-  date: string;
-  type: 'warning' | 'success' | 'error' | 'default';
-  patientId: string;
-  patientName: string;
-  staffName: string;
-  services: string[];
-  status: string;
-  notes?: string;
-}
+// Helper function to get appointment title and badge type from API data
+const getAppointmentTitle = (appointment: ApiAppointment) => {
+  return `${appointment.services?.map(s => s.serviceName).join(', ') || 'Appointment'} - ${appointment.patientName}`;
+};
+
+const getAppointmentBadgeType = (status: string): 'warning' | 'success' | 'error' | 'default' => {
+  switch (status.toLowerCase()) {
+    case 'scheduled': return 'warning';
+    case 'completed': return 'success';
+    case 'cancelled': return 'error';
+    case 'in progress': return 'warning';
+    default: return 'default';
+  }
+};
 
 const Appointments = () => {
   const { t } = useTranslation();
@@ -37,14 +39,45 @@ const Appointments = () => {
   const [patientSearchText, setPatientSearchText] = useState('');
   const [isPatientModalOpen, setIsPatientModalOpen] = useState(false);
   const [isTreatmentModalOpen, setIsTreatmentModalOpen] = useState(false);
-  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [selectedAppointment, setSelectedAppointment] = useState<ApiAppointment | null>(null);
   const [existingTreatment, setExistingTreatment] = useState<TreatmentHistory | null>(null);
   const [activeTab, setActiveTab] = useState('calendar');
+  const [appointments, setAppointments] = useState<ApiAppointment[]>([]);
+  const [appointmentsLoading, setAppointmentsLoading] = useState(false);
   const [form] = Form.useForm();
 
   useEffect(() => {
     fetchServices();
+    fetchAppointments();
   }, []);
+
+  const fetchAppointments = async (start?: Dayjs, end?: Dayjs) => {
+    setAppointmentsLoading(true);
+    try {
+      // Fetch appointments for the specified range or current month by default
+      const startDate = (start || dayjs().startOf('month')).format('YYYY-MM-DD');
+      const endDate = (end || dayjs().endOf('month')).format('YYYY-MM-DD');
+      
+      const response = await appointmentService.getAppointments(startDate, endDate);
+      if (response.success && response.data) {
+        setAppointments(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching appointments:', error);
+      message.error('Failed to load appointments');
+    } finally {
+      setAppointmentsLoading(false);
+    }
+  };
+
+  const onPanelChange = (value: Dayjs, mode: string) => {
+    if (mode === 'month') {
+      // Fetch appointments for the new month
+      const startDate = value.startOf('month');
+      const endDate = value.endOf('month');
+      fetchAppointments(startDate, endDate);
+    }
+  };
 
   const fetchServices = async () => {
     try {
@@ -83,56 +116,22 @@ const Appointments = () => {
     form.setFieldsValue({ patientId: value });
   };
 
-  const [appointments, setAppointments] = useState<Appointment[]>([
-    {
-      id: '1',
-      title: 'Checkup - John Doe',
-      date: dayjs().format('YYYY-MM-DD'),
-      type: 'success',
-      patientId: 'p1',
-      patientName: 'John Doe',
-      staffName: 'Dr. Smith',
-      services: ['General Checkup'],
-      status: 'Scheduled',
-      notes: 'Annual checkup'
-    },
-    {
-      id: '2',
-      title: 'Emergency - Jane Smith',
-      date: dayjs().add(2, 'day').format('YYYY-MM-DD'),
-      type: 'error',
-      patientId: 'p2',
-      patientName: 'Jane Smith',
-      staffName: 'Dr. Johnson',
-      services: ['Emergency Consultation'],
-      status: 'Scheduled',
-      notes: 'Chest pain'
-    },
-    {
-      id: '3',
-      title: 'Follow-up - Bob Wilson',
-      date: dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
-      type: 'success',
-      patientId: 'p3',
-      patientName: 'Bob Wilson',
-      staffName: 'Dr. Smith',
-      services: ['Follow-up Consultation'],
-      status: 'Completed'
-    }
-  ]);
 
   const getListData = (value: Dayjs) => {
     const dateStr = value.format('YYYY-MM-DD');
-    return appointments.filter(apt => apt.date === dateStr);
+    return appointments.filter(apt => dayjs(apt.appointmentDate).format('YYYY-MM-DD') === dateStr);
   };
 
   const dateCellRender = (value: Dayjs) => {
     const listData = getListData(value);
     return (
       <ul style={{ listStyle: 'none', padding: 0 }}>
-        {listData.map((item) => (
-          <li key={item.id}>
-            <Badge status={item.type} text={item.title} />
+        {listData.map((appointment) => (
+          <li key={appointment.id}>
+            <Badge 
+              status={getAppointmentBadgeType(appointment.status)} 
+              text={getAppointmentTitle(appointment)} 
+            />
           </li>
         ))}
       </ul>
@@ -168,7 +167,7 @@ const Appointments = () => {
     setIsPatientModalOpen(false);
   };
 
-  const handleRecordTreatment = async (appointment: Appointment) => {
+  const handleRecordTreatment = async (appointment: ApiAppointment) => {
     setSelectedAppointment(appointment);
     
     // Check if treatment already exists for this appointment
@@ -226,10 +225,10 @@ const Appointments = () => {
   const appointmentColumns = [
     {
       title: 'Date & Time',
-      dataIndex: 'date',
-      key: 'date',
+      dataIndex: 'appointmentDate',
+      key: 'appointmentDate',
       render: (date: string) => dayjs(date).format('MMM DD, YYYY HH:mm'),
-      sorter: (a: Appointment, b: Appointment) => dayjs(a.date).unix() - dayjs(b.date).unix(),
+      sorter: (a: ApiAppointment, b: ApiAppointment) => dayjs(a.appointmentDate).unix() - dayjs(b.appointmentDate).unix(),
     },
     {
       title: 'Patient',
@@ -245,7 +244,7 @@ const Appointments = () => {
       title: 'Services',
       dataIndex: 'services',
       key: 'services',
-      render: (services: string[]) => services.join(', '),
+      render: (services: any[]) => services?.map(s => s.serviceName).join(', ') || '-',
     },
     {
       title: 'Status',
@@ -258,7 +257,7 @@ const Appointments = () => {
     {
       title: 'Actions',
       key: 'actions',
-      render: (_: any, appointment: Appointment) => (
+      render: (_: any, appointment: ApiAppointment) => (
         <Space>
           <Button
             type="primary"
@@ -276,17 +275,27 @@ const Appointments = () => {
 
   const handleSubmit = async (values: any) => {
     try {
-      console.log('Appointment:', {
-        ...values,
-        date: values.date.format('YYYY-MM-DD HH:mm'),
-        patientName: selectedPatient?.fullName,
-        patientInfo: selectedPatient
-      });
-      message.success(t('appointments.createSuccess'));
-      setIsModalOpen(false);
-      resetForm();
-    } catch (error) {
-      message.error(t('errors.UNKNOWN_ERROR'));
+      const appointmentData = {
+        PatientId: values.patientId,
+        StaffId: null, // Will be auto-assigned by backend to current user
+        AppointmentDate: values.date.toISOString(),
+        Status: values.status,
+        Notes: values.notes,
+        ServiceIds: values.serviceIds
+      };
+
+      const response = await appointmentService.createAppointment(appointmentData);
+      if (response.success) {
+        message.success(t('appointments.createSuccess'));
+        setIsModalOpen(false);
+        resetForm();
+        fetchAppointments(); // Refresh appointments list
+      } else {
+        message.error('Failed to create appointment');
+      }
+    } catch (error: any) {
+      const errorCode = error.response?.data?.code || 'UNKNOWN_ERROR';
+      message.error(t(`errors.${errorCode}`));
     }
   };
 
@@ -295,10 +304,13 @@ const Appointments = () => {
       key: 'calendar',
       label: 'Calendar View',
       children: (
-        <Calendar 
-          dateCellRender={dateCellRender}
-          onSelect={onSelect}
-        />
+        <Spin spinning={appointmentsLoading}>
+          <Calendar 
+            dateCellRender={dateCellRender}
+            onSelect={onSelect}
+            onPanelChange={onPanelChange}
+          />
+        </Spin>
       ),
     },
     {
@@ -309,6 +321,7 @@ const Appointments = () => {
           columns={appointmentColumns}
           dataSource={appointments}
           rowKey="id"
+          loading={appointmentsLoading}
           pagination={{
             pageSize: 10,
             showTotal: (total) => `Total ${total} appointments`,
@@ -499,10 +512,10 @@ const Appointments = () => {
               <Typography.Text>{selectedAppointment.patientName}</Typography.Text>
               <br />
               <Typography.Text strong>Appointment: </Typography.Text>
-              <Typography.Text>{dayjs(selectedAppointment.date).format('MMM DD, YYYY HH:mm')}</Typography.Text>
+              <Typography.Text>{dayjs(selectedAppointment.appointmentDate).format('MMM DD, YYYY HH:mm')}</Typography.Text>
               <br />
               <Typography.Text strong>Services: </Typography.Text>
-              <Typography.Text>{selectedAppointment.services.join(', ')}</Typography.Text>
+              <Typography.Text>{selectedAppointment.services?.map(s => s.serviceName).join(', ') || '-'}</Typography.Text>
             </div>
             <TreatmentForm
               treatment={existingTreatment}

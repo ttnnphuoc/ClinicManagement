@@ -87,10 +87,19 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
           <Col xs={24} sm={12} lg={6} key={pkg.id}>
             <Card
               hoverable
-              className={selectedPackageId === pkg.id ? 'border-2 border-blue-500' : ''}
+              onClick={() => onPackageSelect(pkg.id)}
               style={{
                 height: '100%',
                 borderColor: selectedPackageId === pkg.id ? getPackageColor(pkg.name) : undefined,
+                borderWidth: selectedPackageId === pkg.id ? '2px' : '1px',
+                borderStyle: 'solid',
+                boxShadow: selectedPackageId === pkg.id 
+                  ? `0 4px 12px ${getPackageColor(pkg.name)}30` 
+                  : undefined,
+                transform: selectedPackageId === pkg.id ? 'scale(1.02)' : 'scale(1)',
+                transition: 'all 0.3s ease',
+                position: 'relative',
+                cursor: 'pointer',
               }}
               actions={
                 showSelectButton
@@ -108,10 +117,33 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
                   : []
               }
             >
+              {selectedPackageId === pkg.id && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '-1px',
+                    right: '-1px',
+                    backgroundColor: getPackageColor(pkg.name),
+                    color: 'white',
+                    borderRadius: '0 4px 0 12px',
+                    padding: '4px 8px',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    zIndex: 1,
+                  }}
+                >
+                  ✓ Selected
+                </div>
+              )}
               <div style={{ textAlign: 'center', marginBottom: '16px' }}>
                 {getPackageIcon(pkg.name)}
                 <div style={{ marginTop: '8px' }}>
-                  <h3 style={{ margin: '8px 0', color: getPackageColor(pkg.name) }}>
+                  <h3 style={{ 
+                    margin: '8px 0', 
+                    color: getPackageColor(pkg.name),
+                    fontWeight: selectedPackageId === pkg.id ? 'bold' : 'normal',
+                    fontSize: selectedPackageId === pkg.id ? '18px' : '16px',
+                  }}>
                     {pkg.name}
                   </h3>
                   {pkg.isTrialPackage && (

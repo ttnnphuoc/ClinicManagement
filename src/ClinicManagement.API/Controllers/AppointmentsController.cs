@@ -47,11 +47,14 @@ public class AppointmentsController : ControllerBase
     public async Task<IActionResult> CreateAppointment([FromBody] CreateAppointmentRequest request)
     {
         var clinicId = _clinicContext.CurrentClinicId!.Value;
+        
+        // Use the current user as the staff member if not provided or empty
+        var staffId = request.StaffId ?? _clinicContext.CurrentUserId!.Value;
 
         var (success, errorCode, appointment) = await _appointmentService.CreateAppointmentAsync(
             clinicId,
             request.PatientId,
-            request.StaffId,
+            staffId,
             request.AppointmentDate,
             request.Status,
             request.Notes);

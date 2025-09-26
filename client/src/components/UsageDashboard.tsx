@@ -29,8 +29,8 @@ const UsageDashboard: React.FC<UsageDashboardProps> = ({ className, style }) => 
     try {
       setLoading(true);
       const [usageResponse, subResponse] = await Promise.all([
-        subscriptionService.getUsage(),
-        subscriptionService.getCurrentSubscription(),
+        subscriptionService.getUsage().catch(() => ({ success: false, data: [] })),
+        subscriptionService.getCurrentSubscription().catch(() => ({ success: false, data: null })),
       ]);
 
       if (usageResponse.success) {

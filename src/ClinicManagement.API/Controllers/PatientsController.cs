@@ -53,7 +53,13 @@ public class PatientsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreatePatient([FromBody] CreatePatientRequest request)
     {
-        var clinicId = _clinicContext.CurrentClinicId!.Value;
+        if (!_clinicContext.CurrentClinicId.HasValue)
+        {
+            return BadRequest(ApiResponse.ErrorResponse(ResponseCodes.Auth.Unauthorized, 
+                $"No clinic context available. User: {_clinicContext.CurrentUserId}, Role: {_clinicContext.CurrentUserRole}"));
+        }
+        
+        var clinicId = _clinicContext.CurrentClinicId.Value;
 
         var (success, errorCode, patient) = await _patientService.CreatePatientAsync(
             clinicId,

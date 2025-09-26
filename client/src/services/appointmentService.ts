@@ -24,12 +24,12 @@ export interface Appointment {
 }
 
 export interface CreateAppointmentRequest {
-  patientId: string;
-  staffId: string;
-  appointmentDate: string;
-  status: string;
-  notes?: string;
-  serviceIds?: string[];
+  PatientId: string;
+  StaffId?: string | null;
+  AppointmentDate: string;
+  Status: string;
+  Notes?: string;
+  ServiceIds?: string[];
 }
 
 export interface UpdateAppointmentRequest {
