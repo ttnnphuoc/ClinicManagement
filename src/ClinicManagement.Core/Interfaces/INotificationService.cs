@@ -27,4 +27,14 @@ public interface INotificationService
     Task<IEnumerable<Notification>> GetPatientNotificationsAsync(Guid patientId);
     
     Task ProcessPendingNotificationsAsync();
+
+    // Additional methods for user notification management
+    Task<IEnumerable<Notification>> GetUserNotificationsAsync(Guid userId, bool? isRead = null, string? type = null);
+    Task<int> GetUnreadCountAsync(Guid userId);
+    Task<Notification?> GetNotificationAsync(Guid id);
+    Task<Notification> CreateNotificationAsync(Notification notification);
+    Task MarkAsReadAsync(Guid notificationId, Guid userId);
+    Task MarkAllAsReadAsync(Guid userId);
+    Task DeleteNotificationAsync(Guid notificationId, Guid userId);
+    Task SendSystemNotificationAsync(string title, string message, string type, string priority, List<Guid>? userIds = null, string? roleFilter = null);
 }

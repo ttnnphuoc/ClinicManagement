@@ -44,9 +44,13 @@ export interface StaffListResponse {
 }
 
 export const staffService = {
-  getStaff: async (search?: string, page: number = 1, pageSize: number = 10) => {
+  getStaff: async (search?: string, page: number = 1, pageSize: number = 10, clinicId?: string | null) => {
+    const params: any = { search, page, pageSize };
+    if (clinicId) {
+      params.clinicId = clinicId;
+    }
     const response = await api.get<StaffListResponse>('/staff', {
-      params: { search, page, pageSize },
+      params,
     });
     return response.data;
   },

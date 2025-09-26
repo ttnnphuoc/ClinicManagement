@@ -40,7 +40,8 @@ const MainLayout = () => {
   }
   
   const userRole = getUserRole(user.role);
-  console.log('User role:', userRole); // Keep this for debugging
+  console.log('Raw user.role from localStorage:', user.role);
+  console.log('Processed User role:', userRole); // Keep this for debugging
   
   const isSuperAdmin = userRole === 'SuperAdmin';
   const canManageStaff = userRole === 'SuperAdmin' || userRole === 'ClinicManager';
@@ -100,14 +101,14 @@ const MainLayout = () => {
       );
     }
 
-    // Room Management
-    if (canManageStaff) {
-      items.push({
-        key: '/rooms',
-        icon: <HomeOutlined />,
-        label: t('menu.rooms'),
-      });
-    }
+    // Room Management - temporarily commented out
+    // if (canManageStaff) {
+    //   items.push({
+    //     key: '/rooms',
+    //     icon: <HomeOutlined />,
+    //     label: t('menu.rooms'),
+    //   });
+    // }
 
     // Services
     items.push({

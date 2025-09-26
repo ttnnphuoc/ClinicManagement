@@ -17,6 +17,14 @@ public class Notification : BaseEntity, IClinicEntity
     public int RetryCount { get; set; } = 0;
     public DateTime? NextRetry { get; set; }
 
+    // Additional properties for user notifications
+    public Guid? UserId { get; set; }
+    public string? Title { get; set; }
+    public string? Type { get; set; } // "info", "warning", "error", "appointment", "system"
+    public string? Priority { get; set; } = "medium"; // "low", "medium", "high"
+    public bool IsRead { get; set; } = false;
+    public DateTime? ReadAt { get; set; }
+
     // Navigation properties
     public Clinic Clinic { get; set; } = null!;
     public Patient? Patient { get; set; }

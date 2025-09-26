@@ -6,6 +6,7 @@ public interface IStaffRepository : IRepository<Staff>
 {
     Task<Staff?> GetByEmailOrPhoneAsync(string emailOrPhone);
     Task<Staff?> GetByEmailOrPhoneWithClinicsAsync(string emailOrPhone);
+    Task<Staff?> GetByEmailAsync(string email);
     Task<bool> HasAccessToClinicAsync(Guid staffId, Guid clinicId);
     Task<List<Guid>> GetStaffClinicIdsAsync(Guid staffId);
     Task<Staff?> GetByIdWithClinicsAsync(Guid id);

@@ -21,6 +21,7 @@ const Staff = () => {
   const [page, setPage] = useState(1);
   const [pageSize] = useState(10);
   const [searchText, setSearchText] = useState('');
+  const [selectedClinicId, setSelectedClinicId] = useState<string | null>(null);
   const [form] = Form.useForm();
   const [passwordForm] = Form.useForm();
 
@@ -30,7 +31,7 @@ const Staff = () => {
   const fetchStaff = async () => {
     setLoading(true);
     try {
-      const response = await staffService.getStaff(searchText, page, pageSize);
+      const response = await staffService.getStaff(searchText, page, pageSize, selectedClinicId);
       if (response.success && response.data) {
         setStaff(response.data.items);
         setTotal(response.data.total);
@@ -55,7 +56,7 @@ const Staff = () => {
 
   useEffect(() => {
     fetchStaff();
-  }, [page, searchText]);
+  }, [page, searchText, selectedClinicId]);
 
   useEffect(() => {
     fetchClinics();
@@ -208,13 +209,28 @@ const Staff = () => {
 
   return (
     <div>
-      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between' }}>
-        <Input.Search
-          placeholder={t('staff.searchPlaceholder')}
-          allowClear
-          style={{ width: 300 }}
-          onSearch={setSearchText}
-        />
+      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Space>
+          <Input.Search
+            placeholder={t('staff.searchPlaceholder')}
+            allowClear
+            style={{ width: 300 }}
+            onSearch={setSearchText}
+          />
+          <Select
+            placeholder={t('staff.selectClinicFilter')}
+            allowClear
+            style={{ width: 200 }}
+            value={selectedClinicId}
+            onChange={setSelectedClinicId}
+          >
+            {clinics.map(clinic => (
+              <Option key={clinic.id} value={clinic.id}>
+                {clinic.name}
+              </Option>
+            ))}
+          </Select>
+        </Space>
         <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
           {t('staff.addStaff')}
         </Button>

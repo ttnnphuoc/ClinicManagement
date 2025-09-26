@@ -112,4 +112,51 @@ public class ReceiptService : IReceiptService
     {
         return await _receiptRepository.GetReceiptsByDateRangeAsync(startDate, endDate);
     }
+
+    // Additional methods for CRUD operations
+    public async Task<IEnumerable<Receipt>> GetReceiptsAsync()
+    {
+        return await _receiptRepository.GetAllAsync();
+    }
+
+    public async Task<IEnumerable<Receipt>> SearchReceiptsAsync(string searchTerm)
+    {
+        var receipts = await _receiptRepository.GetAllAsync();
+        return receipts.Where(r => 
+            r.ReceiptNumber.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+            (r.Bill?.Patient?.FullName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false));
+    }
+
+    public async Task<Receipt> CreateReceiptAsync(Receipt receipt)
+    {
+        receipt.CreatedAt = DateTime.UtcNow;
+        receipt.UpdatedAt = DateTime.UtcNow;
+        return await _receiptRepository.AddAsync(receipt);
+    }
+
+    public async Task<Receipt> UpdateReceiptAsync(Receipt receipt)
+    {
+        receipt.UpdatedAt = DateTime.UtcNow;
+        await _receiptRepository.UpdateAsync(receipt);
+        await _receiptRepository.SaveChangesAsync();
+        return receipt;
+    }
+
+    public async Task DeleteReceiptAsync(Guid receiptId)
+    {
+        var receipt = await _receiptRepository.GetByIdAsync(receiptId);
+        if (receipt != null)
+        {
+            await _receiptRepository.DeleteAsync(receipt);
+            await _receiptRepository.SaveChangesAsync();
+        }
+    }
+
+    public async Task<byte[]> GenerateReceiptPdfAsync(Receipt receipt)
+    {
+        // TODO: Implement PDF generation for receipt
+        // This is a placeholder - you would use a PDF library like iTextSharp or PdfSharp
+        var content = $"Receipt #{receipt.ReceiptNumber}\nAmount: {receipt.TotalAmount:C}\nDate: {receipt.ReceiptDate:yyyy-MM-dd}";
+        return System.Text.Encoding.UTF8.GetBytes(content);
+    }
 }

@@ -25,7 +25,6 @@ const Medicines = () => {
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMedicine, setEditingMedicine] = useState<Medicine | null>(null);
-  const [searchText, setSearchText] = useState('');
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -272,7 +271,6 @@ const Medicines = () => {
           onSearch={handleSearch}
           onChange={(e) => {
             const value = e.target.value;
-            setSearchText(value);
             if (!value) {
               fetchMedicines();
             }
@@ -366,7 +364,6 @@ const Medicines = () => {
                 step={0.01}
                 controls={false}
                 formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                parser={(value) => parseFloat(value?.replace(/[^\d.]/g, '') || '0')}
                 addonAfter="VND"
                 placeholder={t('medicines.enterPrice')}
               />

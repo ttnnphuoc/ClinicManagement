@@ -27,6 +27,12 @@ public class StaffRepository : Repository<Staff>, IStaffRepository
                 (s.Email == emailOrPhone || s.PhoneNumber == emailOrPhone) && s.IsActive);
     }
 
+    public async Task<Staff?> GetByEmailAsync(string email)
+    {
+        return await _dbSet
+            .FirstOrDefaultAsync(s => s.Email == email && !s.IsDeleted);
+    }
+
     public async Task<bool> HasAccessToClinicAsync(Guid staffId, Guid clinicId)
     {
         return await _context.StaffClinics

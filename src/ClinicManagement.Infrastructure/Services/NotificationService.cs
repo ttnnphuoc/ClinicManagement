@@ -166,4 +166,116 @@ public class NotificationService : INotificationService
             await SendNotificationAsync(notification.Id);
         }
     }
+
+    // Additional methods for user notification management
+    public async Task<IEnumerable<Notification>> GetUserNotificationsAsync(Guid userId, bool? isRead = null, string? type = null)
+    {
+        var query = _context.Notifications.Where(n => n.UserId == userId);
+        
+        if (isRead.HasValue)
+            query = query.Where(n => n.IsRead == isRead.Value);
+            
+        if (!string.IsNullOrEmpty(type))
+            query = query.Where(n => n.Type == type);
+            
+        return await query.OrderByDescending(n => n.CreatedAt).ToListAsync();
+    }
+
+    public async Task<int> GetUnreadCountAsync(Guid userId)
+    {
+        return await _context.Notifications
+            .CountAsync(n => n.UserId == userId && !n.IsRead);
+    }
+
+    public async Task<Notification?> GetNotificationAsync(Guid id)
+    {
+        return await _context.Notifications.FindAsync(id);
+    }
+
+    public async Task<Notification> CreateNotificationAsync(Notification notification)
+    {
+        _context.Notifications.Add(notification);
+        await _context.SaveChangesAsync();
+        return notification;
+    }
+
+    public async Task MarkAsReadAsync(Guid notificationId, Guid userId)
+    {
+        var notification = await _context.Notifications
+            .FirstOrDefaultAsync(n => n.Id == notificationId && n.UserId == userId);
+            
+        if (notification != null)
+        {
+            notification.IsRead = true;
+            notification.ReadAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    public async Task MarkAllAsReadAsync(Guid userId)
+    {
+        var notifications = await _context.Notifications
+            .Where(n => n.UserId == userId && !n.IsRead)
+            .ToListAsync();
+            
+        foreach (var notification in notifications)
+        {
+            notification.IsRead = true;
+            notification.ReadAt = DateTime.UtcNow;
+        }
+        
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteNotificationAsync(Guid notificationId, Guid userId)
+    {
+        var notification = await _context.Notifications
+            .FirstOrDefaultAsync(n => n.Id == notificationId && n.UserId == userId);
+            
+        if (notification != null)
+        {
+            _context.Notifications.Remove(notification);
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    public async Task SendSystemNotificationAsync(string title, string message, string type, string priority, List<Guid>? userIds = null, string? roleFilter = null)
+    {
+        var targetUsers = new List<Guid>();
+        
+        if (userIds != null)
+        {
+            targetUsers.AddRange(userIds);
+        }
+        else if (!string.IsNullOrEmpty(roleFilter))
+        {
+            // Get users by role - this would need proper implementation
+            var clinicId = _clinicContext.CurrentClinicId ?? Guid.Empty;
+            var staffInRole = await _context.Staff
+                .Where(s => s.Role.ToString() == roleFilter && s.StaffClinics.Any(sc => sc.ClinicId == clinicId))
+                .Select(s => s.Id)
+                .ToListAsync();
+            targetUsers.AddRange(staffInRole);
+        }
+
+        foreach (var userId in targetUsers)
+        {
+            var notification = new Notification
+            {
+                Id = Guid.NewGuid(),
+                UserId = userId,
+                Title = title,
+                Message = message,
+                Type = type,
+                Priority = priority,
+                IsRead = false,
+                CreatedAt = DateTime.UtcNow,
+                ClinicId = _clinicContext.CurrentClinicId ?? Guid.Empty
+            };
+            
+            _context.Notifications.Add(notification);
+        }
+        
+        await _context.SaveChangesAsync();
+    }
 }

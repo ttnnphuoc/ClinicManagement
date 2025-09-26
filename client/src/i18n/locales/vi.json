@@ -14,7 +14,8 @@
     "noData": "Không có dữ liệu",
     "yes": "Có",
     "no": "Không",
-    "totalItems": "Tổng {{total}} mục"
+    "totalItems": "Tổng {{total}} mục",
+    "close": "Đóng"
   },
   "menu": {
     "dashboard": "Trang chủ",
@@ -31,7 +32,8 @@
     "inventory": "Kho",
     "notifications": "Thông báo",
     "clinics": "Phòng khám",
-    "staff": "Nhân viên"
+    "staff": "Nhân viên",
+    "subscription": "Gói dịch vụ"
   },
   "dashboard": {
     "title": "Trang chủ",
@@ -219,6 +221,43 @@
     "enterDescription": "Nhập mô tả hoặc ghi chú",
     "selectForm": "Chọn dạng bào chế"
   },
+  "prescriptions": {
+    "title": "Đơn thuốc",
+    "addPrescription": "Thêm đơn thuốc",
+    "editPrescription": "Sửa đơn thuốc",
+    "prescriptionNumber": "Số đơn thuốc",
+    "prescriptionDate": "Ngày kê đơn",
+    "doctor": "Bác sĩ",
+    "patient": "Bệnh nhân",
+    "medicines": "Thuốc",
+    "status": "Trạng thái",
+    "totalAmount": "Tổng tiền",
+    "pending": "Chờ phát thuốc",
+    "dispensed": "Đã phát thuốc",
+    "partial": "Phát thuốc một phần",
+    "cancelled": "Đã hủy",
+    "totalPrescriptions": "Tổng đơn thuốc",
+    "pendingPrescriptions": "Chờ phát thuốc",
+    "dispensedPrescriptions": "Đã phát thuốc",
+    "totalValue": "Tổng giá trị",
+    "newPrescription": "Đơn thuốc mới",
+    "prescriptionDetails": "Chi tiết đơn thuốc",
+    "prescriptionInformation": "Thông tin đơn thuốc",
+    "prescribedMedicines": "Thuốc được kê",
+    "medicine": "Thuốc",
+    "dosage": "Liều lượng",
+    "frequency": "Tần suất",
+    "duration": "Thời gian",
+    "quantity": "Số lượng",
+    "instructions": "Hướng dẫn",
+    "notes": "Ghi chú",
+    "view": "Xem",
+    "print": "In",
+    "dispense": "Phát thuốc",
+    "close": "Đóng",
+    "date": "Ngày",
+    "items": "mục"
+  },
   "staff": {
     "title": "Nhân viên",
     "addStaff": "Thêm nhân viên",
@@ -235,6 +274,7 @@
     "searchPlaceholder": "Tìm kiếm nhân viên...",
     "deleteConfirm": "Bạn có chắc muốn xóa nhân viên này?",
     "deleteSuccess": "Xóa nhân viên thành công",
+    "selectClinicFilter": "Lọc theo phòng khám",
     "createSuccess": "Tạo nhân viên thành công",
     "updateSuccess": "Cập nhật nhân viên thành công",
     "fullNameRequired": "Họ và tên là bắt buộc",
